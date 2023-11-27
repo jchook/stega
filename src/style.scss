@@ -1,0 +1,99 @@
+// https://huemint.com/brand-intersection/#palette=1e1e1b-7ae384-64a09a-434f80
+$c1: #1e1e1b;
+$c2: #7ae384;
+$c3: #64a09a;
+$c4: #434f80;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: $c2;
+  background-color: $c1;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: $c4;
+  text-decoration: inherit;
+}
+a:hover {
+  color: lighten($c4, 10);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h2 {
+  font-size: 2rem;
+  line-height: 1.1;
+  color: lighten($c2, 10);
+}
+
+p {
+  opacity: 0.7;
+}
+
+label {
+  margin-bottom: 0.2em;
+}
+
+hr {
+  border: 1px solid darken($c1, 1);
+}
+
+#app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+label {
+  color: $c3;
+  display: block;
+}
+input {
+  line-height: 1.15em;
+  padding: 0.5em;
+  border-radius: 0.2em;
+  border: 1px solid $c3;
+  background-color: darken($c1, 2);
+  color: $c3;
+}
+textarea {
+  width: 100%;
+  line-height: 1.15em;
+  min-height: 4.6em;
+  padding: 0.5em;
+  border-radius: 0.2em;
+  border: 1px solid $c3;
+  background-color: darken($c1, 2);
+  color: $c3;
+}
+
+p.note {
+  opacity: 0.5;
+  font-size: 0.8em;
+  color: $c3;
+}
+
+button {
+  background-color: $c3;
+  color: darken($c3, 40);
+  border: 1px solid lighten($c3, 40);
+  padding: 0.5em 1.5em;
+  border-radius: 0.2em;
+}
+

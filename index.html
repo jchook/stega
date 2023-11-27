@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stegosaurus</title>
+  </head>
+  <body>
+    <div id="app">
+      <img src="/stego.jpeg" alt="Stego">
+      <h2>Stego</h2>
+      <p>
+        This demo allows you to hide messages in an image.
+      </p>
+      <p>
+        The data is encoded into the least-significant bits of the image's
+        pixel data, making it invisible to the naked eye and difficult to
+        detect.
+      </p>
+      <hr>
+      <form id="embedForm" onsubmit="processImage()">
+        <h3>Embed Message</h3>
+        <div class="field">
+          <label for="dataInput">Select an image</label>
+          <input
+            type="file"
+            id="imageInput"
+            accept="image/png,image/jpeg,image/gif,image/bmp"
+          />
+        </div>
+        <div class="field">
+          <label for="dataInput">Secret message</label>
+          <textarea id="dataInput" placeholder=""></textarea>
+        </div>
+        <p class="note">
+          Note: None of your data is transmitted over the network. All operations
+          occur locally in your browser.
+        </p>
+        <div class="field">
+          <button type="submit">Embed Message</button>
+        </div>
+        <div class="output">
+          <img id="outputImage" />
+        </div>
+      </form>
+      <hr>
+      <form id="extractForm" onsubmit="processImage()">
+        <h3>Extract a Message</h3>
+        <div class="field">
+          <label for="dataInput">
+            Select an image containing an embedded secret message
+          </label>
+          <input
+            type="file"
+            id="imageInput"
+            accept="image/png,image/jpeg,image/gif,image/bmp"
+          />
+        </div>
+        <p class="note">
+          Note: None of your data is transmitted over the network. All operations
+          occur locally in your browser.
+        </p>
+        <div class="field">
+          <button type="submit">Extract Message</button>
+        </div>
+        <div class="output">
+          <label for="dataInput">Extracted secret message</label>
+          <textarea readonly id="dataInput" placeholder=""></textarea>
+        </div>
+      </form>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
