@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,36 +7,54 @@
     <title>Stegosaurus</title>
   </head>
   <body>
+    <div id="frontmatter">
+      <div id="hero">
+        <img id="logo" src="/stego.jpeg" alt="Stego" />
+        <h1>Stega PNG</h1>
+        <h2>
+          Hide secret messages<br />
+          <em class="underline">in image files</em>.
+        </h2>
+      </div>
+      <p>
+        This demo uses
+        <a
+          title="Hiding data within other data"
+          href="https://www.garykessler.net/library/steganography.html"
+          >steganography</a
+        >
+        to embed secret data into an image.
+      </p>
+      <p>
+        The secret message is encoded into the least-significant bits of the
+        image's pixel data, making it invisible to the naked eye and difficult
+        to detect.
+      </p>
+      <p>
+        None of your data are transmitted over the network. All operations
+        are performed locally on your web browser.
+      </p>
+      <p>
+        By using this tool, you agree
+        to the <a href="LICENSE.md">license agreement</a>.
+      </p>
+    </div>
     <div id="app">
-      <img src="/stego.jpeg" alt="Stego">
-      <h2>Stego</h2>
-      <p>
-        This demo allows you to hide messages in an image.
-      </p>
-      <p>
-        The data is encoded into the least-significant bits of the image's
-        pixel data, making it invisible to the naked eye and difficult to
-        detect.
-      </p>
-      <hr>
-      <form id="embedForm" onsubmit="processImage()">
-        <h3>Embed Message</h3>
+      <form id="embedForm">
+        <h3>🧬 Embed a Secret Message</h3>
         <div class="field">
-          <label for="dataInput">Select an image</label>
+          <label for="embedImageInput">Select an image</label>
           <input
             type="file"
-            id="imageInput"
+            name="coverFile"
+            id="embedImageInput"
             accept="image/png,image/jpeg,image/gif,image/bmp"
           />
         </div>
         <div class="field">
-          <label for="dataInput">Secret message</label>
-          <textarea id="dataInput" placeholder=""></textarea>
+          <label for="embedDataInput">Secret message</label>
+          <textarea id="embedDataInput" name="secret"></textarea>
         </div>
-        <p class="note">
-          Note: None of your data is transmitted over the network. All operations
-          occur locally in your browser.
-        </p>
         <div class="field">
           <button type="submit">Embed Message</button>
         </div>
@@ -44,12 +62,34 @@
           <img id="outputImage" />
         </div>
       </form>
-      <hr>
-      <form id="extractForm" onsubmit="processImage()">
-        <h3>Extract a Message</h3>
+      <hr />
+      <form id="extractForm">
+        <h3>🗝️ Extract a Message</h3>
+        <div class="field">
+          <label for="extractImageFile">
+            Select an image containing an embedded secret message
+          </label>
+          <input
+            accept="image/png,image/jpeg,image/gif,image/bmp"
+            id="extractImageFile"
+            name="imageFile"
+            type="file"
+          />
+        </div>
+        <div class="field">
+          <button class="extract" type="submit">Extract Message</button>
+        </div>
+        <div class="output">
+          <label for="extractedData">Extracted secret message</label>
+          <textarea readonly name="secret" id="extractedData"></textarea>
+        </div>
+      </form>
+      <hr />
+      <form id="detectForm" onsubmit="processImage()">
+        <h3>🕵️ Detect Secret Messages (WIP)</h3>
         <div class="field">
           <label for="dataInput">
-            Select an image containing an embedded secret message
+            Select an image that may contain an embedded secret message
           </label>
           <input
             type="file"
@@ -57,18 +97,21 @@
             accept="image/png,image/jpeg,image/gif,image/bmp"
           />
         </div>
-        <p class="note">
-          Note: None of your data is transmitted over the network. All operations
-          occur locally in your browser.
-        </p>
         <div class="field">
-          <button type="submit">Extract Message</button>
+          <button class="extract" type="submit">Detect</button>
         </div>
         <div class="output">
-          <label for="dataInput">Extracted secret message</label>
-          <textarea readonly id="dataInput" placeholder=""></textarea>
+          <img id="detectOutputImage" />
         </div>
       </form>
+      <hr />
+      <div class="credits">
+        <h3>Credits</h3>
+        <p>
+          This free and open source demo was created with 💙 by Wes Roberts. You
+          can find the source code on <a href="#">Github</a>.
+        </p>
+      </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

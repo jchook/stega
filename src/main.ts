@@ -1,20 +1,26 @@
 import "./style.scss";
 
+const $ = document.querySelector.bind(document);
+
 // When the page loads, bind a function to the onsubmit of the form #embedForm
 window.onload = function () {
-  const embedForm = document.getElementById("embedForm") as HTMLFormElement;
+  const embedForm = $("#embedForm") as HTMLFormElement;
   embedForm.onsubmit = function (event) {
     event.preventDefault();
-    processImage();
+    embedSubmit();
   };
+  const extractForm = $("#extractForm") as HTMLFormElement;
+  extractForm.onsubmit = function (event) {
+    event.preventDefault();
+    extractSubmit();
+  }
 };
 
-function processImage() {
-  const imageInput = document.getElementById("imageInput") as HTMLInputElement;
-  const dataInput = document.getElementById("dataInput") as HTMLInputElement;
-  const outputImage = document.getElementById(
-    "outputImage"
-  ) as HTMLImageElement;
+function embedSubmit() {
+  const imageInput = $('#embedForm [name="coverFile"]') as HTMLInputElement;
+  const dataInput = $('#embedForm [name="secret"]') as HTMLInputElement;
+  const outputImage = $("#embedForm .output img") as HTMLImageElement;
+  const outputDiv = $("#embedForm .output") as HTMLDivElement;
 
   const reader = new FileReader();
   reader.onload = function (event) {
@@ -23,7 +29,7 @@ function processImage() {
       const data: Uint8Array = new TextEncoder().encode(dataInput.value);
       const dataURL = embedDataInImage(img, data);
       outputImage.src = dataURL;
-      outputImage.style.display = "block";
+      outputDiv.style.display = "block";
     };
     if (typeof event?.target?.result === "string") {
       img.src = event.target.result;
@@ -36,6 +42,29 @@ function processImage() {
   }
 }
 
+function extractSubmit() {
+  const imageInput = $('#extractForm [name="imageFile"]') as HTMLInputElement;
+  const outputDiv = $("#extractForm .output") as HTMLDivElement;
+  const outputSecret = $("#extractForm .output [name='secret']") as HTMLInputElement;
+
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    const img = new Image();
+    img.onload = function () {
+      const data = extractDataFromImage(img);
+      outputDiv.style.display = "block";
+      outputSecret.value = new TextDecoder().decode(data);
+    };
+    if (typeof event?.target?.result === "string") {
+      img.src = event.target.result;
+    } else {
+      console.log("Error: " + typeof event?.target?.result);
+    }
+  };
+  if (imageInput.files) {
+    reader.readAsDataURL(imageInput.files[0]);
+  }
+}
 function embedDataInImage(image: HTMLImageElement, data: Uint8Array): string {
   const canvas: HTMLCanvasElement = document.createElement("canvas");
   const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
@@ -84,7 +113,7 @@ function setLSB(byte: number, bit: number): number {
 
 function extractDataFromImage(
   image: HTMLImageElement,
-  dataLength: number
+  dataLength: number = 64
 ): Uint8Array {
   const canvas: HTMLCanvasElement = document.createElement("canvas");
   const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
@@ -110,11 +139,24 @@ function extractDataFromImage(
 
   for (let y = 0; y < image.height && dataIndex < dataLength; y++) {
     for (let x = 0; x < image.width; x++) {
+      // Each pixel in the image data array is represented by four consecutive
+      // values (R, G, B, A). The 'imageData.data' array is a flat,
+      // one-dimensional array where each group of four values corresponds to
+      // one pixel, with the 'R' value being at the given index, 'G' at index +
+      // 1, 'B' at index + 2, and 'A' (alpha) at index + 3.
+      //
+      // y * image.width gives the index of the first pixel (start of the row)
+      // in the y-th row. Adding x gives the index of the x-th pixel in that
+      // row. Multiplying the whole thing by 4 gives the actual starting index
+      // of the pixel in the one-dimensional array, because each pixel contains
+      // 4 values (for the RGBA channels).
+      //
       const pixelIndex: number = (y * image.width + x) * 4;
-      const channelMod: number = (x + y) % 3;
+      // const channelMod: number = (x + y) % 3;
 
       for (let channel = 0; channel < 3; ++channel) {
-        const bitCount: number = channel === channelMod ? 2 : 3;
+        // const bitCount: number = channel === channelMod ? 2 : 3;
+        const bitCount = 1;
         const bits: number = getLSB(
           imageData.data[pixelIndex + channel],
           bitCount

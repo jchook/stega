@@ -1,13 +1,25 @@
+@import 'reset.scss';
+
 // https://huemint.com/brand-intersection/#palette=1e1e1b-7ae384-64a09a-434f80
-$c1: #1e1e1b;
-$c2: #7ae384;
-$c3: #64a09a;
+$c1: #f7f5f0;
+$c2: #222;
+$c3: #17508f;
 $c4: #434f80;
 
-:root {
+$g1: #f79131; // Yellow
+$g2: #3aa095; // Green
+$g3: #0486aa; // Cerulean
+$g4: #1e356a; // Blue
+$g5: #3f1e7e; // Purple
+$g6: #65257d; // Violet
+$g7: #9a1d7a; // Magenta
+$g8: #e3403e; // Orange
+
+html, body {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  font-size: 16px;
 
   color: $c2;
   background-color: $c1;
@@ -18,13 +30,88 @@ $c4: #434f80;
   -moz-osx-font-smoothing: grayscale;
 }
 
+#app, #frontmatter {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+#frontmatter {
+  padding-bottom: 0;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+
+h2 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+  margin-top: 1.4em;
+}
+
+#hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 2rem;
+  text-align: center;
+  #logo {
+    max-width: 400px;
+    padding-left: 40px;
+    margin-bottom: 0.2em;
+  }
+  h1 {
+    font-size: 4rem;
+    background-image: linear-gradient(to right, $g7, $g5);
+    background-clip: text;
+    background-blend-mode: hard-light;
+    -webkit-background-clip: text;
+    color: transparent;
+    display: block;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    line-height: 1.1em;
+    margin-bottom: 0.1em;
+  }
+  h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    line-height: 1.3em;
+    em.invisible {
+      color: transparent;
+      -webkit-text-stroke: 1px transparentize($c2, 0.5);
+    }
+    em.underline {
+      text-decoration-line: underline;
+      text-decoration-style: dashed;
+      text-decoration-color: #f79131;
+      text-underline-offset: 0.2em;
+    }
+  }
+}
+
 a {
-  font-weight: 500;
-  color: $c4;
-  text-decoration: inherit;
+  font-weight: bold;
+  color: $c2;
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-color: #f79131;
+  text-underline-offset: 0.2em;
 }
 a:hover {
-  color: lighten($c4, 10);
+  color: $g4;
 }
 
 body {
@@ -33,67 +120,80 @@ body {
   min-height: 100vh;
 }
 
-h2 {
-  font-size: 2rem;
-  line-height: 1.1;
-  color: lighten($c2, 10);
-}
-
 p {
-  opacity: 0.7;
+  margin-bottom: 0.9em;
+  color: transparentize($c2, 0.2);
 }
 
 label {
   margin-bottom: 0.2em;
+  display: block;
 }
 
 hr {
-  border: 1px solid darken($c1, 1);
-}
-
-#app {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
+  border: 1px solid transparentize($c2, 0.85);
+  max-width: 90%;
+  margin: 3rem auto;
 }
 
 .field {
   margin-bottom: 1rem;
 }
-label {
-  color: $c3;
-  display: block;
-}
-input {
+
+input, textarea {
   line-height: 1.15em;
   padding: 0.5em;
-  border-radius: 0.2em;
-  border: 1px solid $c3;
-  background-color: darken($c1, 2);
-  color: $c3;
+  color: $g3;
+  opacity: 0.8;
+}
+textarea:focus {
+  border: 2px solid $g3;
+  outline: 2px solid $g3;
+  opacity: 1;
 }
 textarea {
   width: 100%;
-  line-height: 1.15em;
-  min-height: 4.6em;
+  min-height: 12em;
   padding: 0.5em;
   border-radius: 0.2em;
-  border: 1px solid $c3;
-  background-color: darken($c1, 2);
-  color: $c3;
+  border: 2px dashed $g3;
+  background-color: darken($c1, 4);
 }
 
 p.note {
-  opacity: 0.5;
+  opacity: 0.7;
   font-size: 0.8em;
   color: $c3;
 }
 
-button {
-  background-color: $c3;
-  color: darken($c3, 40);
-  border: 1px solid lighten($c3, 40);
-  padding: 0.5em 1.5em;
-  border-radius: 0.2em;
+.output {
+  display: none;
+  img {
+    max-width: 100%;
+  }
+  textarea, textarea:focus {
+    border-color: transparent;
+  }
 }
 
+button {
+  background-image: linear-gradient(to right, $g3, $g4);
+  color: $c1;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border: 1px solid $g4;
+  padding: 0.5em 1.5em;
+  border-radius: 0.2em;
+  &:hover {
+    background-image: linear-gradient(to right, lighten($g3, 10), lighten($g4, 5));
+    cursor: pointer;
+  }
+}
+
+button.extract {
+  border-color: $g5;
+  background-image: linear-gradient(to right, $g5, $g8);
+  &:hover {
+    background-image: linear-gradient(to right, lighten($g5, 5), lighten($g8, 5));
+  }
+}
