@@ -171,9 +171,10 @@ function extractDataFromImage(
       //
       const pixelIndex: number = (y * image.width + x) * 4;
 
-      // Can increase data capacity by using more than 3 bits per pixel.
+      // Could increase data capacity by using more than 3 bits per pixel.
       // or increase obscurity by using different number of bits per channel
       // or different selection of bits per pixel.
+      //
       // const channelMod: number = (x + y) % 3;
 
       for (let channel = 0; channel < 3; ++channel) {
