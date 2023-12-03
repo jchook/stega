@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stegosaurus</title>
+    <title>Stega PNG</title>
   </head>
   <body>
     <div id="frontmatter">
       <div id="hero">
-        <img id="logo" src="/stego.jpeg" alt="Stego" />
+        <img id="logo" src="/stega.jpeg" alt="Stega" />
         <h1>Stega PNG</h1>
         <h2>
           Hide secret messages<br />
@@ -26,14 +26,14 @@
         to embed secret data into an image.
       </p>
       <p>
-        The secret message is encoded into the least-significant bits of the
-        image's pixel data, making it invisible to the naked eye and difficult
-        to detect.
+        The secret message is encoded stochastically into the least-significant
+        bits of the image's pixel data, making it invisible to the naked eye
+        and difficult to detect.
       </p>
-      <p>
-        None of your data are transmitted over the network. All operations are
-        performed locally on your web browser. All code is open source. Use at
-        your own peril.
+      <p class="note">
+        Note: none of your data are transmitted over the network. All
+        operations are performed locally on your web browser. All code is open
+        source. Use at your own peril.
       </p>
     </div>
     <div id="app">
@@ -58,6 +58,10 @@
           <button type="submit">Embed Message</button>
         </div>
         <div class="output">
+          <p>
+            This image contains the secret message. Right-click and choose
+            "Save Image As..." to save it.
+          </p>
           <img id="outputImage" />
         </div>
       </form>

@@ -46,13 +46,6 @@ function embedSubmit() {
       embedDataInImage(imageData, data);
       context.putImageData(imageData, 0, 0);
       const dataURL = context.canvas.toDataURL();
-      outputImage.onload = function () {
-        // Decode the data from the image
-        console.log("Decoding data from image...");
-        const extractedData = extractDataFromImage(imageData);
-        const decodedData = new TextDecoder().decode(extractedData);
-        console.log({ decodedData });
-      };
       outputImage.src = dataURL;
       outputDiv.style.display = "block";
     };
@@ -175,7 +168,7 @@ function extractDataFromImage(imageData: ImageData): Uint8Array {
 
   // Extract the option byte from the first 8 bits of the image.
   // This allows us to add options in the future.
-  const options = extractBits(8);
+  extractBits(8);
 
   // Extract the length of the data from the first 32 bits of the image.
   // This allows us to know how many bytes to read when extracting.

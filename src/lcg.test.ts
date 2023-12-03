@@ -29,8 +29,7 @@ describe("imageChannelIndexGenerator", () => {
     for (let i = 0; i < length; i++) {
       assert(gen.next().value < 100);
     }
-  }
-  );
+  });
   it("should never generate the same index twice in a row", () => {
     const length = 100;
     const gen = imageChannelIndexGenerator(length, 123);
@@ -40,6 +39,30 @@ describe("imageChannelIndexGenerator", () => {
       assert.notEqual(prev, next);
       prev = next;
     }
-  }
-  );
+  });
+  it("should never generate an alpha channel index", () => {
+    const length = 100;
+    const gen = imageChannelIndexGenerator(length, 123);
+    for (let i = 0; i < length; i++) {
+      assert(gen.next().value % 4 !== 3);
+    }
+  });
+  it("should generate a full cycle of indices for a large length", () => {
+    const length = 100000;
+    const gen = imageChannelIndexGenerator(length, 123);
+    const indexes = new Set<number>();
+    for (let i = 0; i < length; i++) {
+      indexes.add(gen.next().value);
+    }
+    assert.equal(indexes.size, length * 0.75);
+  });
+  it("should wrap around to the beginning of the sequence", () => {
+    const length = 100;
+    const gen = imageChannelIndexGenerator(length, 123);
+    const first = gen.next().value;
+    for (let i = 0; i < length * 0.75 - 1; i++) {
+      gen.next().value;
+    }
+    assert.equal(gen.next().value, first);
+  });
 });

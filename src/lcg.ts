@@ -39,7 +39,6 @@ class Lcg {
     this.modulus = modulus;
     this.multiplier = multiplier;
     this.increment = increment;
-    console.log({ seed, modulus, multiplier, increment });
   }
 
   next(): number {
