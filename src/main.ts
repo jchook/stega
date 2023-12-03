@@ -1,4 +1,19 @@
+import { imageChannelIndexGenerator } from "./lcg";
 import "./style.scss";
+
+// Format:
+// 1. The first byte is a set of flags/options. They are left undefined.
+// 1. The next 32 bits hold the length of the data.
+// 1. The rest of the data is stored in the remaining bits.
+//
+// Data is embedded into "random" pixel channels. The order is determined by an
+// LCG generator. The generator is seeded with the sum of the width and height
+// of the image. This ensures that the same image will always embed data in the
+// same order.
+//
+// The LCG generator is defined in lcg.ts. It is a simple implementation of the
+// LCG algorithm. It is not cryptographically secure, but it is good enough for
+// this application.
 
 const $ = document.querySelector.bind(document);
 
@@ -26,8 +41,18 @@ function embedSubmit() {
   reader.onload = function (event) {
     const img = new Image();
     img.onload = function () {
+      const { context, imageData } = getImageData(img);
       const data: Uint8Array = new TextEncoder().encode(dataInput.value);
-      const dataURL = embedDataInImage(img, data);
+      embedDataInImage(imageData, data);
+      context.putImageData(imageData, 0, 0);
+      const dataURL = context.canvas.toDataURL();
+      outputImage.onload = function () {
+        // Decode the data from the image
+        console.log("Decoding data from image...");
+        const extractedData = extractDataFromImage(imageData);
+        const decodedData = new TextDecoder().decode(extractedData);
+        console.log({ decodedData });
+      };
       outputImage.src = dataURL;
       outputDiv.style.display = "block";
     };
@@ -53,7 +78,7 @@ function extractSubmit() {
   reader.onload = function (event) {
     const img = new Image();
     img.onload = function () {
-      const data = extractDataFromImage(img);
+      const data = extractDataFromImage(getImageData(img).imageData);
       outputDiv.style.display = "block";
       outputSecret.value = new TextDecoder().decode(data);
     };
@@ -68,160 +93,98 @@ function extractSubmit() {
   }
 }
 
-function embedDataInImage(image: HTMLImageElement, data: Uint8Array): string {
-  const canvas: HTMLCanvasElement = document.createElement("canvas");
-  const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
-  if (!ctx) {
-    throw new Error("Unable to get canvas context");
-  }
-
+function getImageData(image: HTMLImageElement): {
+  context: CanvasRenderingContext2D;
+  imageData: ImageData;
+} {
+  const canvas = document.createElement("canvas");
   canvas.width = image.width;
   canvas.height = image.height;
-  ctx.drawImage(image, 0, 0);
+  const context = canvas.getContext("2d");
+  if (context) {
+    context.drawImage(image, 0, 0);
+    return {
+      context,
+      imageData: context.getImageData(0, 0, image.width, image.height),
+    };
+  } else {
+    throw new Error("Could not get canvas context");
+  }
+}
 
-  const imageData: ImageData = ctx.getImageData(
-    0,
-    0,
-    canvas.width,
-    canvas.height
+function embedDataInImage(imageData: ImageData, data: Uint8Array): void {
+  // Get an LCG generator to generate the indices of the pixels to embed data
+  // in. The generator will skip indices that are out of bounds or are the
+  // alpha channel.
+  const imageDataLength = imageData.data.length;
+  const indexGenerator = imageChannelIndexGenerator(
+    imageDataLength,
+    imageData.height + imageData.width
   );
 
-  let dataIndex: number | undefined = undefined;
-  let bitIndex: number = 0;
+  let dataLengthBinaryString = data.length.toString(2);
+  let bitsEmbedded: string = "";
 
-  for (let i = 0; i < imageData.data.length; i += 4) {
-    for (let channel = 0; channel < 3; ++channel) {
-      // Encode the length into the first 32 bits of the image.
-      // This allows us to know how many bytes to read when extracting.
-      if (dataIndex === undefined) {
-        const bit = (data.length >> bitIndex) & 1;
-        imageData.data[i + channel] = setLSB(imageData.data[i + channel], bit);
-        bitIndex++;
-        if (bitIndex === 32) {
-          bitIndex = 0;
-          dataIndex = 0;
-        }
-        continue;
-      }
-
-      if (dataIndex < data.length) {
-        const byte = data[dataIndex];
-        const bit = (byte >> bitIndex) & 1;
-
-        imageData.data[i + channel] = setLSB(imageData.data[i + channel], bit);
-
-        bitIndex++;
-        if (bitIndex === 8) {
-          bitIndex = 0;
-          dataIndex++;
-        }
-      } else {
-        break;
-      }
+  const embedBits = (bits: number, length = 8) => {
+    for (let bitIndex = 0; bitIndex < length; bitIndex++) {
+      const index = indexGenerator.next().value;
+      const bit = (bits >> bitIndex) & 1;
+      bitsEmbedded += bit;
+      imageData.data[index] = setLSB(imageData.data[index], bit);
     }
-  }
+  };
 
-  ctx.putImageData(imageData, 0, 0);
-  return canvas.toDataURL();
+  // Embed an option byte in the first 8 bits of the image.
+  // This allows us to add options in the future.
+  embedBits(0);
+
+  // Embed the length of the data in the first 32 bits of the image.
+  // This allows us to know how many bytes to read when extracting.
+  embedBits(data.length, 32);
+
+  // Reverse the data length binary string
+  dataLengthBinaryString = dataLengthBinaryString.split("").reverse().join("");
+
+  for (let byte of data) {
+    embedBits(byte);
+  }
 }
 
 function setLSB(byte: number, bit: number): number {
   return (byte & 0xfe) | bit;
 }
 
-function extractDataFromImage(
-  image: HTMLImageElement,
-): Uint8Array {
-  const canvas: HTMLCanvasElement = document.createElement("canvas");
-  const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
-  if (!ctx) {
-    throw new Error("Unable to get canvas context");
-  }
-
-  canvas.width = image.width;
-  canvas.height = image.height;
-  ctx.drawImage(image, 0, 0);
-
-  const imageData: ImageData = ctx.getImageData(
-    0,
-    0,
-    canvas.width,
-    canvas.height
+function extractDataFromImage(imageData: ImageData): Uint8Array {
+  const imageDataLength = imageData.data.length;
+  const indexGenerator = imageChannelIndexGenerator(
+    imageDataLength,
+    imageData.height + imageData.width
   );
+  const indexes: number[] = [];
 
-  let data: Uint8Array | undefined = undefined;
-  let dataIndex: number = 0;
-  let byte: number = 0;
-  let bitIndex: number = 0;
-  let dataLength: number = 0;
-
-  for (let y = 0; y < image.height; y++) {
-    for (let x = 0; x < image.width; x++) {
-      // Each pixel in the image data array is represented by four consecutive
-      // values (R, G, B, A). The 'imageData.data' array is a flat,
-      // one-dimensional array where each group of four values corresponds to
-      // one pixel, with the 'R' value being at the given index, 'G' at index +
-      // 1, 'B' at index + 2, and 'A' (alpha) at index + 3.
-      //
-      // y * image.width gives the index of the first pixel (start of the row)
-      // in the y-th row. Adding x gives the index of the x-th pixel in that
-      // row. Multiplying the whole thing by 4 gives the actual starting index
-      // of the pixel in the one-dimensional array, because each pixel contains
-      // 4 values (for the RGBA channels).
-      //
-      const pixelIndex: number = (y * image.width + x) * 4;
-
-      // Could increase data capacity by using more than 3 bits per pixel.
-      // or increase obscurity by using different number of bits per channel
-      // or different selection of bits per pixel.
-      //
-      // const channelMod: number = (x + y) % 3;
-
-      for (let channel = 0; channel < 3; ++channel) {
-
-        // First pull the length of the data from the first 32 bits.
-        if (data === undefined) {
-          const bit = getLSB(imageData.data[pixelIndex + channel], 1);
-          dataLength |= bit << bitIndex;
-          bitIndex++;
-          if (bitIndex === 32) {
-            bitIndex = 0;
-            data = new Uint8Array(dataLength);
-          }
-          continue;
-        } else if (dataIndex >= dataLength) {
-          break;
-        }
-
-        // const bitCount: number = channel === channelMod ? 2 : 3;
-        const bitCount = 1;
-        const bits: number = getLSB(
-          imageData.data[pixelIndex + channel],
-          bitCount
-        );
-
-        byte |= bits << bitIndex;
-        bitIndex += bitCount;
-
-        if (bitIndex >= 8) {
-          data[dataIndex++] = byte;
-          byte = 0;
-          bitIndex = 0;
-
-          if (dataIndex >= dataLength) {
-            break;
-          }
-        }
-      }
+  const extractBits = (length = 8): number => {
+    let bits = 0;
+    for (let bitIndex = 0; bitIndex < length; bitIndex++) {
+      const index = indexGenerator.next().value;
+      indexes.push(index);
+      const bit = getLSB(imageData.data[index], 1);
+      bits |= bit << bitIndex;
     }
-  }
+    return bits;
+  };
 
-  if (dataIndex < dataLength) {
-    throw new Error("Unable to extract all data");
-  }
+  // Extract the option byte from the first 8 bits of the image.
+  // This allows us to add options in the future.
+  const options = extractBits(8);
 
-  if (!data) {
-    throw new Error("Unable to extract data");
+  // Extract the length of the data from the first 32 bits of the image.
+  // This allows us to know how many bytes to read when extracting.
+  const dataLength = extractBits(32);
+
+  // Extract the data
+  const data = new Uint8Array(dataLength);
+  for (let i = 0; i < dataLength; i++) {
+    data[i] = extractBits(8);
   }
 
   return data;
