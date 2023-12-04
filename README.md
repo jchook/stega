@@ -48,7 +48,7 @@ The LCG parameters are chosen as follows:
 - modulus, the nearest power of 2 ≥ length
 - multiplier, the nearest a ≥ sqrt(length) s.t. a-1 ≡ 5 modulo 8, and a is relatively prime to modulus
 - increment, 1
-- seed, the sum of the height and width of the image
+- seed, length/8
 
 The data is embedded in the following format:
 
