@@ -27,6 +27,43 @@ window.onload = function () {
   extractInput.onchange = function () {
     extractSubmit();
   };
+
+  const downloadButton = $("#downloadButton") as HTMLButtonElement;
+  downloadButton.onclick = function (event) {
+    event.preventDefault();
+    const outputImage = $("#embedForm .output img") as HTMLImageElement;
+    const link = document.createElement("a");
+    link.download = "steg.png";
+    link.href = outputImage.src;
+    link.click();
+  };
+
+  const shareButton = $("#shareButton") as HTMLButtonElement;
+  if (!navigator.share) {
+    shareButton.style.display = 'none';
+  }
+  shareButton.onclick = async function (event) {
+    event.preventDefault();
+    try {
+      const outputImage = $("#embedForm .output img") as HTMLImageElement;
+      if (!navigator.share) {
+        throw new Error("Web Share API not supported");
+      }
+      if (!outputImage.src) {
+        throw new Error("No image to share");
+      }
+      const response = await fetch(outputImage.src);
+      const blob = await response.blob();
+      const file = new File([blob], "steg.png", {
+        type: blob.type,
+      });
+      await navigator.share({
+        files: [file],
+      });
+    } catch (err) {
+      console.log("Error: " + err);
+    }
+  };
 };
 
 function embedSubmit() {

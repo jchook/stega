@@ -247,9 +247,7 @@ button.extract,
   }
 }
 
-// Media query for small screens
-@media (max-width: 600px) {
-  html, body {
-    font-size: 14px;
-  }
+#outputActions {
+  display: flex;
+  gap: 1rem;
 }
