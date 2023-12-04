@@ -9,7 +9,7 @@
   <body>
     <div id="frontmatter">
       <div id="hero">
-        <img id="logo" src="/stega.jpeg" alt="Stega" />
+        <div id="logo" alt="Stega PNG"></div>
         <h1>Stega PNG</h1>
         <h2>
           Hide secret messages<br />
@@ -31,18 +31,30 @@
         and difficult to detect.
       </p>
       <p class="note">
-        Note: none of your data are transmitted over the network. All
-        operations are performed locally on your web browser. All code is open
-        source. Use at your own peril.
+        Note: All operations are performed locally on your web browser. None of
+        your data are transmitted over the network. All code is open source and
+        provided under the MIT license.
       </p>
     </div>
     <div id="app">
-      <form id="embedForm">
-        <h3>🧬 Embed a Secret Message</h3>
+      <form class="card" id="embedForm">
+        <div class="with-icon">
+          <h3>🧬</h3>
+          <h3>Embed a Secret Message</h3>
+        </div>
+        <div class="field">
+          <label for="embedDataInput">Enter a secret message</label>
+          <textarea id="embedDataInput" name="secret"></textarea>
+        </div>
         <div class="field">
           <label for="embedImageInput">
-            Select an image to carry your secret message
+            Select an image to carry the secret message
           </label>
+          <div>
+            <label class="button" for="embedImageInput">
+              Embed in an Image
+            </label>
+          </div>
           <input
             type="file"
             name="coverFile"
@@ -50,44 +62,45 @@
             accept="image/*"
           />
         </div>
-        <div class="field">
-          <label for="embedDataInput">Enter a secret message</label>
-          <textarea id="embedDataInput" name="secret"></textarea>
-        </div>
-        <div class="field">
-          <button type="submit">Embed Message</button>
-        </div>
-        <div class="output">
+        <div class="output" style="display: none;">
           <p>
-            This image contains the secret message. Right-click and choose
-            "Save Image As..." to save it.
+            This image contains the secret message. Right-click or long-press
+            the image to save it or share it.
           </p>
           <img id="outputImage" />
         </div>
       </form>
-      <hr />
-      <form id="extractForm">
-        <h3>🗝️ Extract a Secret Message</h3>
+      <form class="card" id="extractForm">
+        <div class="with-icon">
+          <h3>🗝️</h3>
+          <h3>Extract a Secret Message</h3>
+        </div>
         <div class="field">
           <label for="extractImageFile">
             Select an image carrying a secret message
           </label>
+          <div>
+            <label class="button extract" for="extractImageFile">
+              Extract from an Image
+            </label>
+          </div>
           <input
             accept="image/png,image/jpeg,image/gif,image/bmp"
+            class="hidden"
             id="extractImageFile"
             name="imageFile"
             type="file"
           />
         </div>
-        <div class="field">
-          <button class="extract" type="submit">Extract Message</button>
-        </div>
         <div class="output">
-          <label for="extractedData">Extracted secret message</label>
-          <textarea readonly name="secret" id="extractedData"></textarea>
+          <div class="field">
+            <label for="extractedData">
+              See the extracted secret message below:
+            </label>
+            <textarea readonly name="secret" id="extractedData"></textarea>
+          </div>
         </div>
       </form>
-      <hr />
       <!-- form id="detectForm" onsubmit="processImage()">
         <h3>🕵️ Detect Secret Messages (WIP)</h3>
         <div class="field">
@@ -106,12 +119,14 @@
         <div class="output">
           <img id="detectOutputImage" />
         </div>
-      </form>
-      <hr / -->
-      <div class="credits">
-        <h3>Credits</h3>
+      </form -->
+      <div id="credits" class="card">
+        <div class="with-icon">
+          <h3>📜</h3>
+          <h3>Credits</h3>
+        </div>
         <p>
-          This free and open source demo was created with 💙 by Wes Roberts. You
+          This free and open source demo was created by Wes Roberts. You
           can find the source code on
           <a href="https://github.com/jchook/stega">GitHub</a>.
         </p>

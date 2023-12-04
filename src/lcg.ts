@@ -89,6 +89,10 @@ export function* imageChannelIndexGenerator(
  * increment that should be suitable for generating a "full cycle" of numbers
  * over the range, meaning it will generate every number in the range exactly
  * once before repeating.
+ *
+ * The choice of multiplier is not guaranteed to produce statistically random
+ * numbers that will beat a spectral test, but it should be good enough for
+ * embedding data in images.
  */
 function getLcgParameters(length: number) {
   // Use the closest power of 2 for the modulus

@@ -19,14 +19,12 @@ const $ = document.querySelector.bind(document);
 
 // When the page loads, bind a function to the onsubmit of the form #embedForm
 window.onload = function () {
-  const embedForm = $("#embedForm") as HTMLFormElement;
-  embedForm.onsubmit = function (event) {
-    event.preventDefault();
+  const embedInput = $("#embedForm input[type='file']") as HTMLInputElement;
+  embedInput.onchange = function () {
     embedSubmit();
   };
-  const extractForm = $("#extractForm") as HTMLFormElement;
-  extractForm.onsubmit = function (event) {
-    event.preventDefault();
+  const extractInput = $("#extractForm input") as HTMLInputElement;
+  extractInput.onchange = function () {
     extractSubmit();
   };
 };

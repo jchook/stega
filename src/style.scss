@@ -28,16 +28,24 @@ html, body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  scroll-behavior: smooth;
+  scrollbar-color: $g3 $c1;
 }
 
-#app, #frontmatter {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 2rem;
+// Change the highlight color to match the theme
+::selection {
+  background-color: $g1;
+  color: $c1;
 }
+
+// Change the scroll bars to match the theme
 
 #frontmatter {
+  max-width: 600px;
+  margin: 0 auto;
   padding-bottom: 0;
+  padding: 2rem;
 }
 
 h1 {
@@ -55,8 +63,13 @@ h2 {
 h3 {
   font-size: 1.2rem;
   font-weight: bold;
-  margin-bottom: 0.5em;
-  margin-top: 1.4em;
+  margin-bottom: 1em;
+}
+
+.with-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.618rem;
 }
 
 #hero {
@@ -67,7 +80,13 @@ h3 {
   margin-bottom: 2rem;
   text-align: center;
   #logo {
+    background-image: url(/stega.jpeg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 220px;
     max-width: 400px;
+    width: 100%;
     padding-left: 40px;
     margin-bottom: 0.2em;
   }
@@ -102,6 +121,24 @@ h3 {
   }
 }
 
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2rem;
+  padding: 2rem;
+  margin: 0 auto;
+  max-width: 600px;
+  >.card {
+    background-color: #FFF;
+    border-radius: 0.5rem;
+    border: 1px solid darken($c1, 2);
+    box-shadow: 0 0 2rem 0 transparentize($c2, 0.95);
+    padding: 2rem;
+    flex-grow: 1;
+  }
+}
+
 a {
   font-weight: bold;
   color: $c2;
@@ -126,7 +163,7 @@ p {
 }
 
 label {
-  margin-bottom: 0.2em;
+  margin-bottom: 0.4em;
   display: block;
 }
 
@@ -137,7 +174,13 @@ hr {
 }
 
 .field {
+  display: flex;
   margin-bottom: 1rem;
+  flex-grow: 1;
+  flex-direction: column;
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 input, textarea {
@@ -152,12 +195,11 @@ textarea:focus {
   opacity: 1;
 }
 textarea {
-  width: 100%;
   min-height: 12em;
   padding: 0.5em;
   border-radius: 0.2em;
   border: 2px dashed $g3;
-  background-color: darken($c1, 4);
+  background-color: $c1;
 }
 
 p.note {
@@ -167,7 +209,6 @@ p.note {
 }
 
 .output {
-  display: none;
   img {
     max-width: 100%;
   }
@@ -176,7 +217,13 @@ p.note {
   }
 }
 
-button {
+input[type="file"] {
+  display: none;
+}
+
+button,
+.button {
+  display: inline-block;
   background-image: linear-gradient(to right, $g3, $g4);
   color: $c1;
   font-weight: bold;
@@ -184,16 +231,25 @@ button {
   border: 1px solid $g4;
   padding: 0.5em 1.5em;
   border-radius: 0.2em;
+  text-align: center;
   &:hover {
     background-image: linear-gradient(to right, lighten($g3, 10), lighten($g4, 5));
     cursor: pointer;
   }
 }
 
-button.extract {
+button.extract,
+.button.extract {
   border-color: $g5;
   background-image: linear-gradient(to right, $g5, $g8);
   &:hover {
     background-image: linear-gradient(to right, lighten($g5, 5), lighten($g8, 5));
+  }
+}
+
+// Media query for small screens
+@media (max-width: 600px) {
+  html, body {
+    font-size: 14px;
   }
 }
