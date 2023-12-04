@@ -42,45 +42,6 @@ program
     }
   });
 
-async function processImage(
-  imagePath: string,
-  dataPath: string,
-  output: string
-) {
-  try {
-    const originalImage = sharp(imagePath);
-    const metadata = await originalImage.metadata();
-
-    const hasAlpha = metadata.channels === 4;
-    const imageWithAlpha = originalImage
-      .ensureAlpha()
-      .raw()
-      .toColourspace("rgba");
-    const imageData = await imageWithAlpha.toBuffer({
-      resolveWithObject: true,
-    });
-    const dataBuffer = fs.readFileSync(dataPath);
-
-    // Process imageData here
-
-    let finalImage = sharp(imageData.data, {
-      raw: {
-        width: imageData.info.width,
-        height: imageData.info.height,
-        channels: 4,
-      },
-    });
-
-    if (!hasAlpha) {
-      finalImage = finalImage.removeAlpha();
-    }
-
-    await finalImage.toFile(output);
-  } catch (err) {
-    console.error("Error processing the image: ", err);
-  }
-}
-
 // Usage
 program
   .command("extract")
@@ -89,8 +50,12 @@ program
   .option("-o, --output <output>", "Output file")
   .action(async (imagePath, options) => {
     try {
-      const image = sharp(imagePath).raw().toColourspace("rgba");
-      const imageData = await image.toBuffer({ resolveWithObject: true });
+      const imageData = await sharp(imagePath)
+        .raw()
+        .toColourspace("rgba")
+        .ensureAlpha()
+        .toBuffer({ resolveWithObject: true });
+      console.log('Extracting data', imageData.info);
       const data = extractDataFromImage(imageData.data);
       fs.writeFileSync(options.output || "output.txt", data);
     } catch (err) {

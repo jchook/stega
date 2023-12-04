@@ -2,6 +2,9 @@ import { imageChannelIndexGenerator } from "./lcg";
 
 type RgbaData = Uint8ClampedArray | Buffer;
 
+/**
+ * Embeds hidden data into an image's RGBA colorspace data.
+ */
 export function embedDataInImage(rgba: RgbaData, data: Uint8Array): void {
   // Get an LCG generator to generate the indices of the pixels to embed data
   // in. The generator will skip indices that are out of bounds or are the
@@ -44,6 +47,10 @@ function setLSB(byte: number, bit: number): number {
   return (byte & 0xfe) | bit;
 }
 
+/**
+ * Extracts hidden data from an image's RGBA colorspace data.
+ * Inverse of embedDataInImage.
+ */
 export function extractDataFromImage(rgba: RgbaData): Uint8Array {
   const imageDataLength = rgba.length;
   const indexGenerator = imageChannelIndexGenerator(
