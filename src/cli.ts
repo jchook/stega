@@ -2,6 +2,9 @@ import sharp from "sharp";
 import fs from "fs";
 import { Command } from "commander";
 import { embedDataInImage, extractDataFromImage } from "./steg";
+import { readStdinToBuffer } from "./stdio";
+
+const useStdio = (x: string | undefined) => !x || x === "-";
 
 const program = new Command();
 program
@@ -13,7 +16,7 @@ program
   .command("embed")
   .description("Embed data in an image")
   .argument("<image>", "Path to an image to embed data in")
-  .argument("<data>", "Path to a data file to embed")
+  .argument("[data]", "Path to a data file to embed")
   .option("-o, --output <output>", "Output file")
   .action(async (imagePath, dataPath, options) => {
     try {
@@ -23,7 +26,12 @@ program
         .toColourspace("rgba")
         .ensureAlpha()
         .toBuffer({ resolveWithObject: true });
-      embedDataInImage(imageData.data, fs.readFileSync(dataPath));
+      embedDataInImage(
+        imageData.data,
+        useStdio(dataPath)
+          ? await readStdinToBuffer()
+          : fs.readFileSync(dataPath)
+      );
       let finalImage = sharp(imageData.data, {
         raw: {
           width: imageData.info.width,
@@ -36,7 +44,13 @@ program
         finalImage = finalImage.removeAlpha();
       }
 
-      await finalImage.toFile(options.output || "output.png");
+      if (options.output === '-') {
+        finalImage.png().pipe(process.stdout);
+      } else {
+        const outputPath = options.output || "output.png";
+        await finalImage.png().toFile(outputPath);
+        process.stderr.write(`Output to ${outputPath}\n`);
+      }
     } catch (err) {
       console.log("Error: " + err);
     }
@@ -55,9 +69,13 @@ program
         .toColourspace("rgba")
         .ensureAlpha()
         .toBuffer({ resolveWithObject: true });
-      console.log('Extracting data', imageData.info);
       const data = extractDataFromImage(imageData.data);
-      fs.writeFileSync(options.output || "output.txt", data);
+      if (options.output === "-" || !options.output) {
+        process.stdout.write(data);
+      } else {
+        process.stderr.write(`Output to ${options.output}\n`);
+        fs.writeFileSync(options.output, data);
+      }
     } catch (err) {
       console.log("Error: " + err);
     }
