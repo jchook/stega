@@ -2,35 +2,35 @@ import { describe, it, assert } from "vitest";
 import { imageChannelIndexGenerator } from "./lcg";
 
 describe("imageChannelIndexGenerator", () => {
-  it("should generate the same sequence for the same seed", () => {
+  it("generates the same sequence for the same seed", () => {
     const gen1 = imageChannelIndexGenerator(100, 123);
     const gen2 = imageChannelIndexGenerator(100, 123);
     for (let i = 0; i < 100; i++) {
       assert.equal(gen1.next().value, gen2.next().value);
     }
   });
-  it("should generate different sequences for different seeds", () => {
+  it("generates different sequences for different seeds", () => {
     const gen1 = imageChannelIndexGenerator(100, 123);
     const gen2 = imageChannelIndexGenerator(100, 456);
     for (let i = 0; i < 100; i++) {
       assert.notEqual(gen1.next().value, gen2.next().value);
     }
   });
-  it("should generate different sequences for different lengths", () => {
+  it("generates different sequences for different lengths", () => {
     const gen1 = imageChannelIndexGenerator(100, 123);
     const gen2 = imageChannelIndexGenerator(200, 123);
     for (let i = 0; i < 100; i++) {
       assert.notEqual(gen1.next().value, gen2.next().value);
     }
   });
-  it("should never generate an index that is out of bounds", () => {
+  it("never generates an index that is out of bounds", () => {
     const length = 100;
     const gen = imageChannelIndexGenerator(length, 123);
     for (let i = 0; i < length; i++) {
       assert(gen.next().value < 100);
     }
   });
-  it("should never generate the same index twice in a row", () => {
+  it("never generates the same index twice in a row", () => {
     const length = 100;
     const gen = imageChannelIndexGenerator(length, 123);
     let prev = gen.next().value;
@@ -40,14 +40,14 @@ describe("imageChannelIndexGenerator", () => {
       prev = next;
     }
   });
-  it("should never generate an alpha channel index", () => {
+  it("never generates an alpha channel index", () => {
     const length = 100;
     const gen = imageChannelIndexGenerator(length, 123);
     for (let i = 0; i < length; i++) {
       assert(gen.next().value % 4 !== 3);
     }
   });
-  it("should generate a full cycle of indices for a large length", () => {
+  it("generates a full cycle of indices for a large length", () => {
     const length = 100000;
     const gen = imageChannelIndexGenerator(length, 123);
     const indexes = new Set<number>();
@@ -56,7 +56,7 @@ describe("imageChannelIndexGenerator", () => {
     }
     assert.equal(indexes.size, length * 0.75);
   });
-  it("should wrap around to the beginning of the sequence", () => {
+  it("wraps around to the beginning of the sequence", () => {
     const length = 100;
     const gen = imageChannelIndexGenerator(length, 123);
     const first = gen.next().value;

@@ -25,6 +25,14 @@ export function embedDataInImage(rgba: RgbaData, data: Uint8Array): void {
     Math.floor(rgba.length / 8)
   );
 
+  // Check to see if the image is large enough to embed the data
+  const maxDataLength = Math.floor(imageDataLength / 4 * 3 / 8);
+  if (data.length > maxDataLength) {
+    throw new Error(
+      `Data is too large to embed in image. Max data length is ${maxDataLength}.`
+    );
+  }
+
   let dataLengthBinaryString = data.length.toString(2);
   let bitsEmbedded: string = "";
 

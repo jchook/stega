@@ -2,13 +2,13 @@ import { describe, it, assert } from "vitest";
 import { embedDataInImage, extractDataFromImage } from "./steg";
 
 describe("embedDataInImage", () => {
-  it("should return undefined", () => {
+  it("returns undefined", () => {
     const data = Buffer.from("Hello World!");
     const image = Buffer.from(new Array(400).fill(0));
     const result = embedDataInImage(image, data);
     assert(result === undefined);
   });
-  it("should embed data in image", () => {
+  it("embeds data in image", () => {
     const data = Buffer.from("Hello World!");
     const image = Buffer.from(new Array(400).fill(0));
     embedDataInImage(image, data);
@@ -25,10 +25,15 @@ describe("embedDataInImage", () => {
     const imageSum = image.reduce((a, b) => a + b, 0);
     assert.isAbove(imageSum, dataSum);
   });
+  it("throws if data is too large", () => {
+    const data = Buffer.from(new Array(100).fill(0));
+    const image = Buffer.from(new Array(100).fill(0));
+    assert.throws(() => embedDataInImage(image, data));
+  })
 });
 
 describe("extractDataFromImage", () => {
-  it("should extract data embedded in an image", () => {
+  it("extracts data embedded in an image", () => {
     const message = "Hello World!";
     const data = Buffer.from(message);
     const image = Buffer.from(new Array(4000).fill(0));
