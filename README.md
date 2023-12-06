@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://stegapng.netlify.app/">
-    <img src="https://github.com/jchook/stega/blob/main/public/stega-nobg.png?raw=true" width="300" />
+    <img src="https://github.com/jchook/stega/blob/main/packages/web/public/stega-nobg.png?raw=true" width="300" />
   </a>
 </p>
 
@@ -68,8 +68,8 @@ Feel free to submit pull requests.
 Roadmap
 -------
 
-- CLI tool
-- Support embedding/extracting files and binary data instead of just text
+- Support embedding/extracting files and binary data in the demo
+- Support for embedding file names for easy/meaningful extraction
 - Detection tool to reveal whether data is hidden in a PNG's LSBs
 
 
