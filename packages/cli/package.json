@@ -1,0 +1,27 @@
+{
+  "name": "@stegapng/cli",
+  "version": "1.0.0",
+  "description": "A CLI for stegapng",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "keywords": [
+    "steganography",
+    "png",
+    "cli"
+  ],
+  "author": "Wes Roberts <takq@a.zinc.email>",
+  "license": "MIT",
+  "dependencies": {
+    "@stegapng/core": "file:../core",
+    "commander": "^11.1.0",
+    "sharp": "^0.33.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.3",
+    "typescript": "^5.3.2",
+    "vitest": "^1.0.1"
+  }
+}

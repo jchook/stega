@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  Hide secret messages in image files.
+  Hide secret messages in an image's RGB colorspace.
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@ How It Works
 
 This demo uses steganography to embed secret data into an image.
 
-The secret message is encoded stochastically into the least-significant bits of the image's pixel data, making it invisible to the naked eye and difficult to detect.
+The secret message is encoded stochastically into the least-significant bits of the image's RGB pixel data, making it invisible to the naked eye and difficult to detect.
 
 Note: All operations are performed locally on your web browser. None of your data are transmitted over the network.
 

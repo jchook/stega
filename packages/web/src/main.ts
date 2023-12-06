@@ -1,22 +1,8 @@
-import { embedDataInImage, extractDataFromImage } from "./steg";
+import { embedDataInImage, extractDataFromImage } from "@stegapng/core";
 import "./style.scss";
 
-/**
- * Data Embedding Format:
- * 1. The first byte is a set of flags/options. They are left undefined.
- * 2. The next 32 bits hold the length of the data.
- * 3. The rest of the data is stored in the remaining bits.
- *
- * Data is embedded into "random" pixel channels. The order is determined by an
- * LCG generator. The generator is seeded with the length of the RGBA colorspace
- * divided by 8. This ensures that the same image will always embed data in the
- * same order.
- *
- * The LCG generator is defined in lcg.ts. It is a simple implementation of the
- * LCG algorithm. It is not cryptographically secure, but it is good enough for
- * this application.
- */
 const $ = document.querySelector.bind(document);
+
 
 // When the page loads, bind a function to the onsubmit of the form #embedForm
 window.onload = function () {
@@ -26,6 +12,7 @@ window.onload = function () {
   };
   const extractInput = $("#extractForm input") as HTMLInputElement;
   extractInput.onchange = function () {
+    console.log('extracting')
     extractSubmit();
   };
 
@@ -84,6 +71,8 @@ function embedSubmit() {
       const dataURL = context.canvas.toDataURL();
       outputImage.src = dataURL;
       outputDiv.style.display = "block";
+      // Clear the input so that the onchange event fires again
+      imageInput.value = "";
     };
     if (typeof event?.target?.result === "string") {
       img.src = event.target.result;
@@ -110,6 +99,8 @@ function extractSubmit() {
       const data = extractDataFromImage(getImageData(img).imageData.data);
       outputDiv.style.display = "block";
       outputSecret.value = new TextDecoder().decode(data);
+      // Clear the input so that the onchange event fires again
+      imageInput.value = "";
     };
     if (typeof event?.target?.result === "string") {
       img.src = event.target.result;

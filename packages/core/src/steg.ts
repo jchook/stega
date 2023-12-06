@@ -1,5 +1,15 @@
 import { imageChannelIndexGenerator } from "./lcg";
 
+/**
+ * Data is embedded into "random" pixel channels. The order is determined by an
+ * LCG generator. The generator is seeded with the length of the RGBA colorspace
+ * divided by 8. This ensures that the same image will always embed data in the
+ * same order.
+ *
+ * The LCG generator is defined in lcg.ts. It is a simple implementation of the
+ * LCG algorithm. It is not cryptographically secure, but it is good enough for
+ * this application.
+ */
 type RgbaData = Uint8ClampedArray | Buffer;
 
 /**
