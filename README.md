@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  Hide secret messages in an image's RGB colorspace.
+  Hide arbitrary data in an image's RGB colorspace.
 </p>
 
 <p align="center">
@@ -25,9 +25,9 @@ Packages
 How It Works
 ------------
 
-This demo uses steganography to embed secret data into an image.
+Stega PNG uses [steganography](https://en.wikipedia.org/wiki/Steganography) to embed invisible secret data into an image.
 
-The secret message is encoded stochastically into the least-significant bits of the image's RGB pixel data, making it invisible to the naked eye and difficult to detect.
+The secret data are encoded stochastically into the least-significant bits of the image's RGB pixel data, making it invisible to the naked eye and difficult to detect.
 
 [Check out the demo](https://stegapng.netlify.app/) or, for more details about the algorithm, see the [core library](./packages/core/README.md).
 
@@ -35,15 +35,18 @@ The secret message is encoded stochastically into the least-significant bits of 
 Contributing
 ------------
 
-Feel free to submit pull requests.
+Feel free to open an issue or submit a pull request.
 
 
 Roadmap
 -------
 
-- Support embedding/extracting files and binary data in the demo
-- Support for embedding file names for easy/meaningful extraction
-- Detection tool to reveal whether data is hidden in a PNG's LSBs
+- [x] Basic proof of concept (Web demo)
+- [x] Factor-out portable TypeScript core
+- [x] CLI tool
+- [ ] Embedding/extracting consecutive chunks of data including multiple files and their metadata
+- [ ] Detection mode to predict or illustrate whether data is hidden in a PNG's LSBs
+- [ ] Efficient rewrite in Go/Rust/etc
 
 
 License

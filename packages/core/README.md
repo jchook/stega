@@ -39,3 +39,16 @@ The data is embedded in the following format:
 Currently only the least significant bit of each target channel is used to store secret data. However, there are plans to expand this to use up to n LSBs, trading detectability for larger data storage capacity.
 
 
+Algorithm Plan
+--------------
+
+Data will be encoded in segments into the image.
+
+Each segment will consist of:
+
+1. Data type as an extensible byte
+1. Data length as variable bytes
+1. Data
+1. Return to step 1 until an END data type is reached
+
+
