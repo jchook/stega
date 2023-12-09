@@ -1,7 +1,16 @@
 #!/bin/bash
 
-# Test context
-source ./spec/context.sh
+# Temp dir
+rm -rf tmp
+mkdir tmp
+trap "rm -rf tmp" EXIT INT TERM HUP QUIT ABRT
+
+# Command to run stega
+stega="tsx ./src/index.ts"
+
+# Test runner function
+# Blow up on errors
+set -e
 
 # Test help
 test_help() {

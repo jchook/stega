@@ -1,18 +1,16 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
+    "module": "CommonJS",
     "lib": ["ES2020"],
     "skipLibCheck": true,
     "esModuleInterop": true,
 
     /* Bundler mode */
     "moduleResolution": "node",
-    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "outDir": "dist",
 
     /* Linting */
     "strict": true,
