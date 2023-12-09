@@ -7,12 +7,10 @@
 </p>
 
 <p align="center">
-  Part of the <a href="https://github.com/jchook/stega">Stega PNG project</a>.
-</p>
-
-<p align="center">
+  <a href="https://github.com/jchook/stega">Stega PNG project</a> |
   <a href="https://stegapng.netlify.app/">View Demo</a>
 </p>
+
 
 Usage Examples
 --------------
@@ -32,3 +30,19 @@ stega extract embedded.png
 ```
 
 
+Advanced Usage Examples
+-----------------------
+
+Stega PNG is designed with the UNIX philosophy that each tool should do one
+thing well. This is why it provides no native support for storing file trees,
+compression, or similar.
+
+You can easily combine stega with other tools to achieve amazing things.
+
+```sh
+# Embed many files into an image
+tar cz files | stega embed target.png > embedded.png
+
+# Extract all the files
+stega extract embedded.png | tar xz
+```

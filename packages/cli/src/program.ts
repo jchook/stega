@@ -15,6 +15,7 @@ export function createProgram() {
 
   program
     .command("embed")
+    .alias("c")
     .description("Embed data in an image")
     .argument("<image>", "Path to an image to embed data in")
     .argument("[data]", "Path to a data file to embed")
@@ -45,7 +46,7 @@ export function createProgram() {
           finalImage = finalImage.removeAlpha();
         }
 
-        if (options.output === '-') {
+        if (options.output === "-") {
           finalImage.png().pipe(process.stdout);
         } else {
           const outputPath = options.output || "output.png";
@@ -60,6 +61,7 @@ export function createProgram() {
   // Usage
   program
     .command("extract")
+    .alias("x")
     .description("Extract data from an image")
     .argument("<image>", "Path to an image to extract data from")
     .option("-o, --output <output>", "Output file")
@@ -82,5 +84,5 @@ export function createProgram() {
       }
     });
 
-  return program
+  return program;
 }
