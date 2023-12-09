@@ -1,5 +1,5 @@
-import * as sharp from "sharp";
-import * as fs from "fs";
+import sharp from "sharp";
+import fs from "fs";
 import { Command } from "commander";
 import { embedDataInImage, extractDataFromImage } from "@stegapng/core";
 import { readStdinToBuffer } from "./stdio";
@@ -46,7 +46,10 @@ export function createProgram() {
           finalImage = finalImage.removeAlpha();
         }
 
-        if (options.output === "-") {
+        if (
+          (!options.output && !process.stdout.isTTY) ||
+          options.output === "-"
+        ) {
           finalImage.png().pipe(process.stdout);
         } else {
           const outputPath = options.output || "output.png";
