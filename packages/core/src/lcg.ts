@@ -75,12 +75,13 @@ export function* imageChannelIndexGenerator(
   const { modulus, multiplier, increment } =
     getLcgParameters(imageDataLength);
   const lcg = new Lcg(seed, modulus, multiplier, increment);
-  while (true) {
+  for (let i = 0; i < modulus; i++) {
     const index = lcg.next();
     if (index >= imageDataLength) continue; // Skip if index is out of bounds
     if (index % 4 === 3) continue; // Skip alpha channel
     yield index; // Calculate actual array index, skipping alpha
   }
+  throw new Error("Data too large to embed in image");
 }
 
 /**
