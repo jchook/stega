@@ -84,6 +84,10 @@ export function* imageChannelIndexGenerator(
   throw new Error("Data too large to embed in image");
 }
 
+export function getMaxDataLength(imageLength: number): number {
+  return Math.floor(imageLength * 0.75);
+}
+
 /**
  * Selecting a good multiplier and modulus for a Linear Congruential Generator
  * is a bit of a black art. This function will return a modulus, multiplier and

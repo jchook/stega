@@ -1,14 +1,10 @@
 import { describe, it, assert } from "vitest";
-import { imageChannelIndexGenerator } from "./lcg";
-
-function getMaxLength(imageLength: number): number {
-  return Math.floor(imageLength * 0.75);
-}
+import { imageChannelIndexGenerator, getMaxDataLength } from "./lcg";
 
 describe("imageChannelIndexGenerator", () => {
   it("generates the same sequence for the same seed", () => {
     const length = 100;
-    const max = getMaxLength(length);
+    const max = getMaxDataLength(length);
     const gen1 = imageChannelIndexGenerator(length, length - 1);
     const gen2 = imageChannelIndexGenerator(length, length - 1);
     for (let i = 0; i < max; i++) {
@@ -17,7 +13,7 @@ describe("imageChannelIndexGenerator", () => {
   });
   it("generates different sequences for different seeds", () => {
     const length = 100;
-    const max = getMaxLength(length);
+    const max = getMaxDataLength(length);
     const gen1 = imageChannelIndexGenerator(length, length - 1);
     const gen2 = imageChannelIndexGenerator(length, length - 2);
     for (let i = 0; i < max; i++) {
@@ -26,7 +22,7 @@ describe("imageChannelIndexGenerator", () => {
   });
   it("generates different sequences for different lengths", () => {
     const length = 100;
-    const max = getMaxLength(length);
+    const max = getMaxDataLength(length);
     const gen1 = imageChannelIndexGenerator(length, length - 1);
     const gen2 = imageChannelIndexGenerator(length * 4, length - 1);
     for (let i = 0; i < max; i++) {
@@ -35,7 +31,7 @@ describe("imageChannelIndexGenerator", () => {
   });
   it("never generates an index that is out of bounds", () => {
     const length = 100;
-    const max = getMaxLength(length);
+    const max = getMaxDataLength(length);
     const gen = imageChannelIndexGenerator(length, length - 1);
     for (let i = 0; i < max; i++) {
       assert(gen.next().value < 100);
@@ -43,7 +39,7 @@ describe("imageChannelIndexGenerator", () => {
   });
   it("never generates the same index twice", () => {
     const length = 100;
-    const max = getMaxLength(length);
+    const max = getMaxDataLength(length);
     const gen = imageChannelIndexGenerator(length, length - 1);
     const prev: number[] = [];
     for (let i = 0; i < max; i++) {
@@ -54,7 +50,7 @@ describe("imageChannelIndexGenerator", () => {
   });
   it("never generates an alpha channel index", () => {
     const length = 100;
-    const max = getMaxLength(length);
+    const max = getMaxDataLength(length);
     const gen = imageChannelIndexGenerator(length, length - 1);
     for (let i = 0; i < max; i++) {
       assert(gen.next().value % 4 !== 3);
@@ -62,7 +58,7 @@ describe("imageChannelIndexGenerator", () => {
   });
   it("generates a full cycle of indices for a large length", () => {
     const length = 100000;
-    const max = getMaxLength(length);
+    const max = getMaxDataLength(length);
     const gen = imageChannelIndexGenerator(length, length - 1);
     const indexes = new Set<number>();
     for (let i = 0; i < max; i++) {
@@ -72,7 +68,7 @@ describe("imageChannelIndexGenerator", () => {
   });
   it("blows up if you try to exceed the limit", () => {
     const length = 1000;
-    const max = getMaxLength(length);
+    const max = getMaxDataLength(length);
     const gen = imageChannelIndexGenerator(length, length - 1);
     const indexes = new Set<number>();
     for (let i = 0; i < max; i++) {
