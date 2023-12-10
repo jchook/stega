@@ -14,7 +14,7 @@
 About
 -----
 
-The `steg` CLI tool allows you to losslessly embed data into the RGB colorspace
+The `stega` CLI tool allows you to losslessly embed data into the RGB colorspace
 a PNG image and later extract it.
 
 
