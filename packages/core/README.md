@@ -29,18 +29,16 @@ We can configure exactly where secret bits are embedded in the PNG colorspace da
 By default, a [linear congruential generator (LCG)](https://en.wikipedia.org/wiki/Linear_congruential_generator) allows us to very efficiently choose target pixel channels pseudorandomly on a "full cycle". This means that each pixel channel is picked at most exactly once. Thus, the available space to store data is maximized without needing to generate large arrays of shuffled indices, keep track of "used" channels, etc.
 
 
-Data Encoding
-=============
+Data Encoding Scheme
+====================
 
 StegaV0
---------
+-------
 
-This approach embraces the <abbr title="Keep it simple stupid">KISS</abbr>
-approach, while also allowing for future extension and backwards compatibility.
+Version 1 embraces the <abbr title="Keep it simple stupid">KISS</abbr> approach. The byte-length of the supplied data is encoded into the first 4 bytes, followed by the data itself.
 
-| Segment         | Length  | Description                        |
-|-----------------|---------|------------------------------------|
-| Options         | 1 byte  | Always 0, reserved for future use  |
-| Data Length (L) | 4 bytes | Max 4GB, limited by the image size |
-| Data            | L bytes |                                    |
+| Segment         | Length  | Description                                |
+|-----------------|---------|--------------------------------------------|
+| Data Length (L) | 4 bytes | Max 4GB, further limited by the image size |
+| Data            | L bytes | Arbitrary user-supplied data               |
 

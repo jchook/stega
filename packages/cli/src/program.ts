@@ -4,7 +4,9 @@ import { Command } from "commander";
 import { embedDataInImage, extractDataFromImage } from "@stegapng/core";
 import { readStdinToBuffer } from "./stdio";
 
-const useStdio = (x: string | undefined) => !x || x === "-";
+const useStdin = (x: string | undefined) => !x || x === "-";
+const useStdout = (x: string | undefined) =>
+  (!x && !process.stdout.isTTY) || x === "-";
 
 export function createProgram() {
   const program = new Command();
@@ -30,7 +32,7 @@ export function createProgram() {
           .toBuffer({ resolveWithObject: true });
         embedDataInImage(
           imageData.data,
-          useStdio(dataPath)
+          useStdin(dataPath)
             ? await readStdinToBuffer()
             : fs.readFileSync(dataPath)
         );
@@ -46,10 +48,7 @@ export function createProgram() {
           finalImage = finalImage.removeAlpha();
         }
 
-        if (
-          (!options.output && !process.stdout.isTTY) ||
-          options.output === "-"
-        ) {
+        if (useStdout(options.output)) {
           finalImage.png().pipe(process.stdout);
         } else {
           const outputPath = options.output || "output.png";
@@ -61,7 +60,6 @@ export function createProgram() {
       }
     });
 
-  // Usage
   program
     .command("extract")
     .alias("x")
@@ -82,6 +80,65 @@ export function createProgram() {
           process.stderr.write(`Output to ${options.output}\n`);
           fs.writeFileSync(options.output, data);
         }
+      } catch (err) {
+        console.log("Error: " + err);
+      }
+    });
+
+  program
+    .command("genpng")
+    .description("Generate a PNG file")
+    .argument("[width]", "Width of the image", "256")
+    .argument("[height]", "Height of the image", "256")
+    .option("-o, --output <output>", "Output file")
+    .action(async (widthStr, heightStr, options) => {
+      try {
+        const width = parseInt(widthStr);
+        const height = parseInt(heightStr);
+        const imageData = await sharp({
+          create: {
+            width: width,
+            height: height,
+            channels: 4,
+            background: { r: 0, g: 0, b: 0, alpha: 0 },
+          },
+        })
+          .raw()
+          .toColourspace("rgba")
+          .ensureAlpha()
+          .toBuffer({ resolveWithObject: true });
+
+          // Draw a pretty picture
+          // TODO: Make this configurable or random
+          for (let x = 0; x < width; x++) {
+            for (let y = 0; y < height; y++) {
+              const red = Math.sin(x * y) * 255;
+              const green = Math.cos(x * y) * 255;
+              const blue = Math.tan(x * y) * 255;
+              const index = (y * width + x) * 4;
+              imageData.data[index] = red;
+              imageData.data[index + 1] = green;
+              imageData.data[index + 2] = blue;
+              imageData.data[index + 3] = 255;
+            }
+          }
+
+          // Write to a file
+          const finalImage = sharp(imageData.data, {
+            raw: {
+              width,
+              height,
+              channels: 4,
+            },
+          }).png()
+
+          if (useStdout(options.output)) {
+            finalImage.pipe(process.stdout);
+          } else {
+            const outputPath = options.output || "output.png";
+            await finalImage.toFile(outputPath);
+            process.stderr.write(`Output to ${outputPath}\n`);
+          }
       } catch (err) {
         console.log("Error: " + err);
       }
