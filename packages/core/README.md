@@ -11,19 +11,27 @@
 </p>
 
 <p align="center">
-  <a href="https://stegapng.netlify.app/">View Demo</a>
+  <a href="https://stegapng.netlify.app/">Browser Demo</a> |
+  <a href="https://github.com/jchook/stega/blob/main/packages/cli">CLI Utility</a>
 </p>
 
 
 About
 -----
 
-![License MIT](https://img.shields.io/badge/license-MIT-brightgreen)
-![Test Coverage 100%](https://img.shields.io/badge/test%20coverage-100%25-brightgreen
+<p>
+  <a href="https://stegapng.netlify.app/">
+    <img src="https://img.shields.io/badge/test%20coverage-100%25-brightgreen" title="100% Test Coverage" />
+  </a>
+  <a href="https://stegapng.netlify.app/">
+    <img src="https://img.shields.io/badge/license-MIT-brightgreen" title="MIT License" />
+  </a>
+</p>
+
 
 Stega PNG allows you to hide arbitrary data into the RGBA colorspace data of images.
 
-Read the [API documentation](./docs/README.md) or check out the [CLI tool](../cli/README.md).
+Read the [API documentation](./docs/README.md).
 
 
 Install

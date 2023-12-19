@@ -35,16 +35,14 @@ Simple Usage Examples
 The stega CLI tool works very simply by default.
 
 ```sh
-# Print general usage info
-stega help
-
-# Embed data.txt into target.png
-# Write the result to embedded.png
+# Embed data.txt into an image
 stega embed image.png < data.txt > embedded.png
 
-# Extract data.txt out of embedded.png
+# Extract data.txt out of an image
 stega extract embedded.png
 ```
+
+To get usage information, run `stega help`.
 
 
 Real-World Usage Examples
@@ -55,14 +53,14 @@ You can easily combine stega with other *nix tools to achieve amazing things.
 
 ### Files
 
-Embed entire file trees, using gzip compression.
+Embed entire file trees, using gzip compression and stega shorthand.
 
 ```sh
 # Embed files into an image
-tar cz mydir | stega embed image.png > embedded.png
+tar cz mydir | stega c image.png > embedded.png
 
 # Extract all the files
-stega extract embedded.png | tar xz
+stega x embedded.png | tar xz
 ```
 
 ### Encryption
@@ -73,8 +71,8 @@ Securely encrypt and compress files before embedding, too.
 # Embed data encrypted with AES (password)
 tar cz mydir | gpg --symmetric --cipher-algo AES256 | stega embed image.png > embedded.png
 
-# Embed data encrypted with a recipient's public key (asymmetric)
-tar cz mydir | gpg --encrypt --recipient recipient_email_or_id | stega embed image.png > embedded.png
+# Embed data encrypted for a specific recipient (using their public key)
+tar cz mydir | gpg --encrypt --recipient some@example.email | stega embed image.png > embedded.png
 
 # Extract and decrypt the data (from either encryption scenario)
 stega extract embedded.png | gpg --decrypt | tar xz
