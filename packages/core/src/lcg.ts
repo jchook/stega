@@ -33,7 +33,7 @@ class Lcg {
     seed: number,
     modulus: number,
     multiplier: number,
-    increment: number
+    increment: number,
   ) {
     this.state = seed % modulus;
     this.modulus = modulus;
@@ -54,7 +54,7 @@ class Lcg {
  */
 export function* imageChannelIndexGeneratorSimple(
   imageDataLength: number,
-  seed: number
+  seed: number,
 ): Generator<number> {
   let index = seed % imageDataLength;
   while (true) {
@@ -70,10 +70,9 @@ export function* imageChannelIndexGeneratorSimple(
  */
 export function* imageChannelIndexGenerator(
   imageDataLength: number,
-  seed: number
+  seed: number,
 ): Generator<number> {
-  const { modulus, multiplier, increment } =
-    getLcgParameters(imageDataLength);
+  const { modulus, multiplier, increment } = getLcgParameters(imageDataLength);
   const lcg = new Lcg(seed, modulus, multiplier, increment);
   for (let i = 0; i < modulus; i++) {
     const index = lcg.next();

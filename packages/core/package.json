@@ -11,10 +11,13 @@
     "clean": "rimraf dist docs",
     "dist": "pnpm run clean && pnpm run build && pnpm run test run",
     "precommit": "pnpm run dist",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",
+    "@vitest/coverage-istanbul": "^1.0.4",
+    "@vitest/coverage-v8": "^1.0.4",
     "rimraf": "^5.0.5",
     "typedoc": "^0.25.4",
     "typedoc-plugin-markdown": "^3.17.1",

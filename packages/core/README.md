@@ -15,6 +15,27 @@
 </p>
 
 
+About
+-----
+
+![License MIT](https://img.shields.io/badge/license-MIT-brightgreen)
+![Test Coverage 100%](https://img.shields.io/badge/test%20coverage-100%25-brightgreen
+
+Stega PNG allows you to hide arbitrary data into the RGBA colorspace data of images.
+
+Read the [API documentation](./docs/README.md) or check out the [CLI tool](../cli/README.md).
+
+
+Install
+-------
+
+To use this core library in your JavaScript or TypeScript project, add it to your project's dependencies using your preferred Node package manager:
+
+```sh
+npm install @stegapng/core
+```
+
+
 Colorspace Encoding
 -------------------
 

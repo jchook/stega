@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "fmt": "prettier --write packages/*/src/**/*.ts",
-    "precommit": "./bin/all.sh precommit",
-    "test": "./bin/all.sh test"
+    "precommit": "./bin/all.sh pnpm run precommit",
+    "test": "./bin/all.sh pnpm run test"
   },
   "keywords": [
     "steganography",
@@ -15,6 +15,8 @@
   "author": "Wes Roberts <takq@a.zinc.email>",
   "license": "MIT",
   "devDependencies": {
+    "@vitest/coverage-istanbul": "^1.0.4",
+    "husky": "^8.0.3",
     "prettier": "^3.1.1"
   }
 }

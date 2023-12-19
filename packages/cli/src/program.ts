@@ -41,7 +41,7 @@ export function createProgram() {
           imageData.data,
           useStdin(dataPath)
             ? await readStdinToBuffer()
-            : fs.readFileSync(dataPath)
+            : fs.readFileSync(dataPath),
         );
         let finalImage = sharp(imageData.data, {
           raw: {
@@ -115,37 +115,37 @@ export function createProgram() {
           .ensureAlpha()
           .toBuffer({ resolveWithObject: true });
 
-          // Draw a pretty picture
-          // TODO: Make this configurable or random
-          for (let x = 0; x < width; x++) {
-            for (let y = 0; y < height; y++) {
-              const red = Math.sin(x * y) * 255;
-              const green = Math.cos(x * y) * 255;
-              const blue = Math.tan(x * y) * 255;
-              const index = (y * width + x) * 4;
-              imageData.data[index] = red;
-              imageData.data[index + 1] = green;
-              imageData.data[index + 2] = blue;
-              imageData.data[index + 3] = 255;
-            }
+        // Draw a pretty picture
+        // TODO: Make this configurable or random
+        for (let x = 0; x < width; x++) {
+          for (let y = 0; y < height; y++) {
+            const red = Math.sin(x * y) * 255;
+            const green = Math.cos(x * y) * 255;
+            const blue = Math.tan(x * y) * 255;
+            const index = (y * width + x) * 4;
+            imageData.data[index] = red;
+            imageData.data[index + 1] = green;
+            imageData.data[index + 2] = blue;
+            imageData.data[index + 3] = 255;
           }
+        }
 
-          // Write to a file
-          const finalImage = sharp(imageData.data, {
-            raw: {
-              width,
-              height,
-              channels: 4,
-            },
-          }).png()
+        // Write to a file
+        const finalImage = sharp(imageData.data, {
+          raw: {
+            width,
+            height,
+            channels: 4,
+          },
+        }).png();
 
-          if (useStdout(options.output)) {
-            finalImage.pipe(process.stdout);
-          } else {
-            const outputPath = options.output || "output.png";
-            await finalImage.toFile(outputPath);
-            process.stderr.write(`Output to ${outputPath}\n`);
-          }
+        if (useStdout(options.output)) {
+          finalImage.pipe(process.stdout);
+        } else {
+          const outputPath = options.output || "output.png";
+          await finalImage.toFile(outputPath);
+          process.stderr.write(`Output to ${outputPath}\n`);
+        }
       } catch (err) {
         console.log("Error: " + err);
       }

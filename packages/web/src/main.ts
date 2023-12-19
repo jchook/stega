@@ -3,7 +3,6 @@ import "./style.scss";
 
 const $ = document.querySelector.bind(document);
 
-
 // When the page loads, bind a function to the onsubmit of the form #embedForm
 window.onload = function () {
   const embedInput = $("#embedForm input[type='file']") as HTMLInputElement;
@@ -12,7 +11,7 @@ window.onload = function () {
   };
   const extractInput = $("#extractForm input") as HTMLInputElement;
   extractInput.onchange = function () {
-    console.log('extracting')
+    console.log("extracting");
     extractSubmit();
   };
 
@@ -28,7 +27,7 @@ window.onload = function () {
 
   const shareButton = $("#shareButton") as HTMLButtonElement;
   if (!navigator.share) {
-    shareButton.style.display = 'none';
+    shareButton.style.display = "none";
   }
   shareButton.onclick = async function (event) {
     event.preventDefault();
@@ -89,7 +88,7 @@ function extractSubmit() {
   const imageInput = $('#extractForm [name="imageFile"]') as HTMLInputElement;
   const outputDiv = $("#extractForm .output") as HTMLDivElement;
   const outputSecret = $(
-    "#extractForm .output [name='secret']"
+    "#extractForm .output [name='secret']",
   ) as HTMLInputElement;
 
   const reader = new FileReader();
@@ -131,4 +130,3 @@ function getImageData(image: HTMLImageElement): {
     throw new Error("Could not get canvas context");
   }
 }
-

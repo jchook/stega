@@ -1,5 +1,5 @@
 import { describe, it, assert } from "vitest";
-import { imageChannelIndexGenerator, getMaxDataLength } from "./lcg";
+import { imageChannelIndexGenerator, getMaxDataLength, imageChannelIndexGeneratorSimple } from "./lcg";
 
 describe("imageChannelIndexGenerator", () => {
   it("generates the same sequence for the same seed", () => {
@@ -77,3 +77,24 @@ describe("imageChannelIndexGenerator", () => {
     assert.throw(() => gen.next());
   });
 });
+
+describe("imageChannelIndexGeneratorSimple", () => {
+  it("generates the same sequence for the same seed", () => {
+    const length = 100;
+    const max = getMaxDataLength(length);
+    const gen1 = imageChannelIndexGeneratorSimple(length, length - 1);
+    const gen2 = imageChannelIndexGeneratorSimple(length, length - 1);
+    for (let i = 0; i < max; i++) {
+      assert.equal(gen1.next().value, gen2.next().value);
+    }
+  });
+  it("generates different sequences for different seeds", () => {
+    const length = 100;
+    const max = getMaxDataLength(length);
+    const gen1 = imageChannelIndexGeneratorSimple(length, length - 1);
+    const gen2 = imageChannelIndexGeneratorSimple(length, length - 5);
+    for (let i = 0; i < max; i++) {
+      assert.notEqual(gen1.next().value, gen2.next().value);
+    }
+  });
+})
