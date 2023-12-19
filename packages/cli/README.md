@@ -11,10 +11,10 @@
   <a href="https://stegapng.netlify.app/">View Demo</a>
 </p>
 
-Intro
+About
 -----
 
-The `stega` CLI tool allows you to losslessly embed data into the RGB colorspace of an image, store it as a PNG file, and later extract it.
+Hide any data in the RGB colorspace of an image.
 
 
 Install
@@ -68,10 +68,10 @@ stega x embedded.png | tar xz
 Securely encrypt and compress files before embedding, too.
 
 ```sh
-# Embed data encrypted with AES (password)
+# Embed data encrypted with AES (with a password)
 tar cz mydir | gpg --symmetric --cipher-algo AES256 | stega embed image.png > embedded.png
 
-# Embed data encrypted for a specific recipient (using their public key)
+# Embed data encrypted for a specific recipient (with their public key)
 tar cz mydir | gpg --encrypt --recipient some@example.email | stega embed image.png > embedded.png
 
 # Extract and decrypt the data (from either encryption scenario)
