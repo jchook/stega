@@ -553,5 +553,5 @@ packages:
 
   file:../core:
     resolution: {directory: ../core, type: directory}
-    name: '@stegaa/core'
+    name: '@stegapng/core'
     dev: false

@@ -21,8 +21,8 @@ Colorspace Encoding
 Since PNG images use lossless compression, it is possible to store invisible data in the least significant bits of the image's RGB (red, green, and blue) colorspace. Alpha (transparency) channels are ignored since using alpha LSBs would often make it trivial to detect the presence of hidden data.
 
 
-Bit Embedding Selection
------------------------
+Where To Embed the Bits?
+------------------------
 
 We can configure exactly where secret bits are embedded in the PNG colorspace data, using the best algorithm that fits our requirements.
 
@@ -35,10 +35,12 @@ Data Encoding Scheme
 StegaV0
 -------
 
-Version 1 embraces the <abbr title="Keep it simple stupid">KISS</abbr> approach. The byte-length of the supplied data is encoded into the first 4 bytes, followed by the data itself.
+Version 0 embraces the <abbr title="Keep it simple stupid">KISS</abbr> approach. The byte-length of the supplied data is encoded into the first 4 bytes, followed by the data itself.
 
 | Segment         | Length  | Description                                |
 |-----------------|---------|--------------------------------------------|
 | Data Length (L) | 4 bytes | Max 4GB, further limited by the image size |
 | Data            | L bytes | Arbitrary user-supplied data               |
+
+The RGBA colorspace index selection is done via a LCG with parameters derived from the RGBA colorspace array itself.
 

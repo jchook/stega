@@ -1,32 +1,46 @@
 import { imageChannelIndexGenerator } from "./lcg";
 
 /**
- * Data is embedded into "random" pixel channels. The order is determined by an
- * LCG generator. The generator is seeded with the length of the RGBA colorspace
- * divided by 8. This ensures that the same image will always embed data in the
- * same order.
+ * RGBA colorspace data. A one-dimensional array containing the data in the
+ * RGBA order, with integer values. The order goes by rows from the top-left
+ * pixel to the bottom-right.
  *
- * The LCG generator is defined in lcg.ts. It is a simple implementation of the
- * LCG algorithm. It is not cryptographically secure, but it is good enough for
- * this application.
+ * In a browser context, this data is obtained by calling getImageData() on a
+ * canvas element. In a Node.js context, you can use a library such as sharp to
+ * get the colorspace data of an image.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/ImageData
+ * @see https://sharp.pixelplumbing.com/api-colour#tocolourspace
  */
-type RgbaData = Uint8ClampedArray | Buffer;
+export type RgbaData = Uint8ClampedArray | Buffer;
 
 /**
  * Embeds hidden data into an image's RGBA colorspace data.
+ *
+ * Data is embedded into "random" pixel channels. The order is determined by an
+ * LCG generator. The generator will skip indices that are out of bounds or are
+ * the alpha channel.
+ *
+ * Choosing an LCG generator ensures that storage capacity is maximized, while
+ * the data is also stochastically distributed throughout the image.
  */
-export function embedDataInImage(rgba: RgbaData, data: Uint8Array): void {
+export function embedDataInImage(
+  rgba: RgbaData,
+  data: Uint8Array,
+  seed: number | undefined = undefined
+): void {
   // Get an LCG generator to generate the indices of the pixels to embed data
   // in. The generator will skip indices that are out of bounds or are the
   // alpha channel.
   const imageDataLength = rgba.length;
+  const indexGeneratorSeed = seed ?? Math.floor(rgba.length / 8);
   const indexGenerator = imageChannelIndexGenerator(
     imageDataLength,
-    Math.floor(rgba.length / 8)
+    indexGeneratorSeed
   );
 
   // Check to see if the image is large enough to embed the data
-  const maxDataLength = Math.floor(imageDataLength / 4 * 3 / 8);
+  const maxDataLength = Math.floor(((imageDataLength / 4) * 3) / 8);
   if (data.length > maxDataLength) {
     throw new Error(
       `Data is too large to embed in image. Max data length is ${maxDataLength}.`
@@ -62,11 +76,15 @@ function setLSB(byte: number, bit: number): number {
  * Extracts hidden data from an image's RGBA colorspace data.
  * Inverse of embedDataInImage.
  */
-export function extractDataFromImage(rgba: RgbaData): Uint8Array {
+export function extractDataFromImage(
+  rgba: RgbaData,
+  seed: number | undefined = undefined
+): Uint8Array {
   const imageDataLength = rgba.length;
+  const indexGeneratorSeed = seed ?? Math.floor(rgba.length / 8);
   const indexGenerator = imageChannelIndexGenerator(
     imageDataLength,
-    Math.floor(rgba.length / 8)
+    indexGeneratorSeed
   );
 
   const extractBits = (length = 8): number => {

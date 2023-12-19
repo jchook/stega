@@ -8,6 +8,13 @@ const useStdin = (x: string | undefined) => !x || x === "-";
 const useStdout = (x: string | undefined) =>
   (!x && !process.stdout.isTTY) || x === "-";
 
+function notExists(path: string) {
+  if (fs.existsSync(path)) {
+    throw new Error(`File ${path} exists`);
+  }
+  return path;
+}
+
 export function createProgram() {
   const program = new Command();
   program

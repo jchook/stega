@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "precommit": "pnpm run build && pnpm run test",
     "preview": "vite preview",
     "release": "ntl deploy --prod",
-    "test": "vitest"
+    "test": "echo 'No tests yet.'"
   },
   "devDependencies": {
     "sass": "^1.69.5",
@@ -16,5 +17,6 @@
   },
   "dependencies": {
     "@stegapng/core": "file:../core"
-  }
+  },
+  "license": "MIT"
 }

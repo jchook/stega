@@ -11,21 +11,35 @@
   <a href="https://stegapng.netlify.app/">View Demo</a>
 </p>
 
-About
+Intro
 -----
 
-The `stega` CLI tool allows you to losslessly embed data into the RGB colorspace
-a PNG image and later extract it.
+The `stega` CLI tool allows you to losslessly embed data into the RGB colorspace of an image, store it as a PNG file, and later extract it.
+
+
+Install
+-------
+
+Easily install via npm:
+
+```sh
+npm install -g stega-cli
+```
+
+**OR**, if you prefer a packaged binary, download an [official release](#) and install it in your PATH. Don't forget to give the executable permission to run.
 
 
 Simple Usage Examples
 ---------------------
 
+The stega CLI tool works very simply by default.
+
 ```sh
 # Print general usage info
 stega help
 
-# Embed data.txt into target.png. Write the result to embedded.png.
+# Embed data.txt into target.png
+# Write the result to embedded.png
 stega embed image.png < data.txt > embedded.png
 
 # Extract data.txt out of embedded.png
@@ -36,8 +50,12 @@ stega extract embedded.png
 Real-World Usage Examples
 -------------------------
 
-Stega PNG aligns with the UNIX philosophy that each tool should do one thing
-well. You can easily combine stega with other tools to achieve amazing things.
+You can easily combine stega with other *nix tools to achieve amazing things.
+
+
+### Files
+
+Embed entire file trees, using gzip compression.
 
 ```sh
 # Embed files into an image
@@ -45,7 +63,13 @@ tar cz mydir | stega embed image.png > embedded.png
 
 # Extract all the files
 stega extract embedded.png | tar xz
+```
 
+### Encryption
+
+Securely encrypt and compress files before embedding, too.
+
+```sh
 # Embed data encrypted with AES (password)
 tar cz mydir | gpg --symmetric --cipher-algo AES256 | stega embed image.png > embedded.png
 
