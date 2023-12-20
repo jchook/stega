@@ -2,15 +2,18 @@
   "name": "@stegapng/core",
   "version": "1.0.0",
   "description": "Hide secret data in images",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
+  },
   "scripts": {
     "build": "pnpm run build:src && pnpm run build:docs",
     "build:docs": "typedoc",
     "build:src": "tsc",
     "clean": "rimraf dist docs",
     "fmt": "prettier --write src",
-    "prepare": "pnpm run clean && pnpm run fmt && pnpm run build && pnpm run test",
+    "prepack": "pnpm run clean && pnpm run fmt && pnpm run build && pnpm run test",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },

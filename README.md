@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://stegapng.netlify.app/">View Demo</a> |
-  <a href="https://github.com/jchook/stega/blob/main/packages/cli">CLI Utility</a>
+  <a href="https://github.com/jchook/stega/blob/main/packages/cli/README.md">CLI Utility</a>
 </p>
 
 
@@ -23,15 +23,15 @@ Stega PNG uses [steganography](https://en.wikipedia.org/wiki/Steganography) to e
 
 We encode the data stochastically into the least-significant bits of the image's RGB colorspace data, making it invisible to the naked eye and difficult to detect.
 
-Note, in real-world secnarios this tool is often combined with compression, encryption, and  a custom or configured bit selection process.
+In real-world secnarios, one would combine this tool with compression, encryption, and non-default bit selection. You can achieve this easily using the [CLI utility](https://github.com/jchook/stega/blob/main/packages/cli/README.md).
 
 
 Packages
 --------
 
-- [Command line utility](./packages/cli/README.md)
-- [Web browser demo](./packages/web/README.md)
-- [Core library](./packages/core/README.md)
+- [Command line utility](https://github.com/jchook/stega/blob/main/packages/cli/README.md)
+- [Web browser demo](https://github.com/jchook/stega/blob/main/packages/web/README.md)
+- [Core library](https://github.com/jchook/stega/blob/main/packages/core/README.md)
 
 
 Use Case Examples
@@ -43,22 +43,22 @@ Use Case Examples
 
 - **Data Leakage**: Corporations can embed hidden markers in sensitive documents for each recipient. If these documents are leaked, the source of the leak can be traced using the embedded information.
 
-- **Anti-Piracy**: Software and media companies can embed unique identifiers in distributed digital content to track and identify pirated copies.
+- **Anti-Piracy**: Software and media companies can embed unique identifiers in distributed digital content to track and trace pirated copies.
 
 - **Privacy**: Anyone can use steganography to hide personal information, treasure maps, or sensitive data from being easily discovered or viewed.
 
 - **Research**: Privacy and security researchers can use Stega PNG as a framework for exploring different steganographic techniques or attacks.
 
-- **For Fun**: Good for challenges, inside jokes, or similar.
+- **For Fun**: Steganography can make for fun challenges (think Cicada 3301), inside jokes, or similar.
 
 
-Please use this software ethically and for just cause.
+If you use StegaPNG in other interesting ways, please [let us know](https://github.com/jchook/stega/issues/new). Also, please use this software ethically and for just cause.
 
 
 Contributing,
 ------------
 
-Feel free to open an issue or submit a pull request.
+Feel free to [open an issue](https://github.com/jchook/stega/issues/new) or fork the repo and submit a pull request.
 
 
 Roadmap
@@ -69,10 +69,11 @@ Roadmap
 - [x] CLI tool
 - [x] Monorepo
 - [x] Configurable seed for LCG
-- [ ] Configurable bit selector or embedder class, perhaps with .maxLength()
+- [ ] Configurable embedder class, with optional .maxLength()
 - [ ] Detection mode to predict or illustrate whether data is hidden in a PNG's LSBs
 - [ ] Support many embedding paradigms for different types of target documents
 - [ ] Efficient rewrite in Go/Rust/etc
+- [ ] GUI tool
 
 
 License

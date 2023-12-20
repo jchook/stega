@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "fmt": "prettier --write packages/*/src/**/*.ts",
-    "prepare": "./bin/all.sh pnpm run prepare",
+    "prepack": "./bin/all.sh pnpm run prepack",
     "test": "./bin/all.sh pnpm run test"
   },
   "keywords": [

@@ -20,29 +20,24 @@ Hide any data in the RGB colorspace of an image.
 Install
 -------
 
-Easily install via npm:
+Easily install via your favorite Node.js package manager (e.g. npm):
 
 ```sh
 npm install -g @stegapng/cli
 ```
 
-**OR**, if you prefer a packaged binary, download an [official release](#) and install it in your PATH. Don't forget to give the executable permission to run.
-
-
 Simple Usage Examples
 ---------------------
 
-The stega CLI tool works very simply by default.
+The stega CLI tool works very simply by default. For more usage info, run `stega help`.
 
 ```sh
-# Embed data.txt into an image
+# Embed data into image.png
 stega embed image.png < data.txt > embedded.png
 
-# Extract data.txt out of an image
+# Extract data out of an image
 stega extract embedded.png
 ```
-
-To get usage information, run `stega help`.
 
 
 Real-World Usage Examples
@@ -53,19 +48,19 @@ You can easily combine stega with other *nix tools to achieve amazing things.
 
 ### Files
 
-Embed entire file trees, using gzip compression and stega shorthand.
+Embed entire file trees, using gzip compression.
 
 ```sh
 # Embed files into an image
-tar cz mydir | stega c image.png > embedded.png
+tar cz mydir | stega embed image.png > embedded.png
 
 # Extract all the files
-stega x embedded.png | tar xz
+stega extract embedded.png | tar xz
 ```
 
 ### Encryption
 
-Securely encrypt and compress files before embedding, too.
+Securely compress and encrypt files before embedding, too.
 
 ```sh
 # Embed data encrypted with AES (with a password)
@@ -83,3 +78,9 @@ Contribution
 ------------
 
 Please feel free to open an issue or submit a pull request.
+
+
+License
+-------
+
+MIT

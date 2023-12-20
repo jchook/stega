@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "fmt": "prettier --write src",
-    "prepare": "pnpm run fmt && pnpm run build && pnpm run test",
+    "prepack": "pnpm run fmt && pnpm run build && pnpm run test",
     "pkg": "pkg . --out-path=bin --targets node18-linux-x64,node18-macos-x64,node18-win-x64 --overwrite",
     "test": "spec/test.sh"
   },
