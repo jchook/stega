@@ -1,5 +1,9 @@
 import { describe, it, assert } from "vitest";
-import { imageChannelIndexGenerator, getMaxDataLength, imageChannelIndexGeneratorSimple } from "./lcg";
+import {
+  imageChannelIndexGenerator,
+  getMaxDataLength,
+  imageChannelIndexGeneratorSimple,
+} from "./lcg";
 
 describe("imageChannelIndexGenerator", () => {
   it("generates the same sequence for the same seed", () => {
@@ -97,4 +101,4 @@ describe("imageChannelIndexGeneratorSimple", () => {
       assert.notEqual(gen1.next().value, gen2.next().value);
     }
   });
-})
+});
