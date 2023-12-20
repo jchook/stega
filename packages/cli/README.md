@@ -23,7 +23,7 @@ Install
 Easily install via npm:
 
 ```sh
-npm install -g stega-cli
+npm install -g @stegapng/cli
 ```
 
 **OR**, if you prefer a packaged binary, download an [official release](#) and install it in your PATH. Don't forget to give the executable permission to run.
