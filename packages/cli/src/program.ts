@@ -8,7 +8,7 @@ const useStdin = (x: string | undefined) => !x || x === "-";
 const useStdout = (x: string | undefined) =>
   (!x && !process.stdout.isTTY) || x === "-";
 
-function notExists(path: string) {
+function assertNotPathExists(path: string) {
   if (fs.existsSync(path)) {
     throw new Error(`File ${path} exists`);
   }
@@ -29,6 +29,7 @@ export function createProgram() {
     .argument("<image>", "Path to an image to embed data in")
     .argument("[data]", "Path to a data file to embed")
     .option("-o, --output <output>", "Output file")
+    .option("-f, --force", "Overwrite output file if it exists")
     .action(async (imagePath, dataPath, options) => {
       try {
         const metadata = await sharp(imagePath).metadata();
@@ -59,6 +60,9 @@ export function createProgram() {
           finalImage.png().pipe(process.stdout);
         } else {
           const outputPath = options.output || "output.png";
+          if (!options.force) {
+            assertNotPathExists(outputPath);
+          }
           await finalImage.png().toFile(outputPath);
           process.stderr.write(`Output to ${outputPath}\n`);
         }
@@ -73,6 +77,7 @@ export function createProgram() {
     .description("Extract data from an image")
     .argument("<image>", "Path to an image to extract data from")
     .option("-o, --output <output>", "Output file")
+    .option("-f, --force", "Overwrite output file if it exists")
     .action(async (imagePath, options) => {
       try {
         const imageData = await sharp(imagePath)
@@ -84,6 +89,9 @@ export function createProgram() {
         if (options.output === "-" || !options.output) {
           process.stdout.write(data);
         } else {
+          if (!options.force) {
+            assertNotPathExists(options.output);
+          }
           process.stderr.write(`Output to ${options.output}\n`);
           fs.writeFileSync(options.output, data);
         }
@@ -98,6 +106,7 @@ export function createProgram() {
     .argument("[width]", "Width of the image", "256")
     .argument("[height]", "Height of the image", "256")
     .option("-o, --output <output>", "Output file")
+    .option("-f, --force", "Overwrite output file if it exists")
     .action(async (widthStr, heightStr, options) => {
       try {
         const width = parseInt(widthStr);
@@ -143,6 +152,9 @@ export function createProgram() {
           finalImage.pipe(process.stdout);
         } else {
           const outputPath = options.output || "output.png";
+          if (!options.force) {
+            assertNotPathExists(outputPath);
+          }
           await finalImage.toFile(outputPath);
           process.stderr.write(`Output to ${outputPath}\n`);
         }
