@@ -1,6 +1,6 @@
 # Function: embedDataInImage
 
-▸ **embedDataInImage**(`rgba`, `data`, `seed`): `void`
+▸ **embedDataInImage**(`rgba`, `data`, `seed?`): `void`
 
 Embeds hidden data into an image's RGBA colorspace data.
 
@@ -11,13 +11,15 @@ the alpha channel.
 Choosing an LCG generator ensures that storage capacity is maximized, while
 the data is also stochastically distributed throughout the image.
 
+Note that the supplied array is modified in-place.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `rgba` | [`RgbaData`](../types/RgbaData.md) |
-| `data` | `Uint8Array` |
-| `seed` | `undefined` \| `number` |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `rgba` | [`RgbaData`](../types/RgbaData.md) | `undefined` |
+| `data` | `Uint8Array` | `undefined` |
+| `seed` | `undefined` \| `number` | `undefined` |
 
 #### Returns
 

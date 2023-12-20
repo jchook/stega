@@ -9,11 +9,13 @@
     "build:docs": "typedoc",
     "build:src": "tsc",
     "clean": "rimraf dist docs",
-    "dist": "pnpm run clean && pnpm run build && pnpm run test run",
-    "precommit": "pnpm run dist",
+    "prepare": "pnpm run clean && pnpm run build && pnpm run test",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@types/node": "^20.10.5",
     "@vitest/coverage-istanbul": "^1.0.4",

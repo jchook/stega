@@ -8,10 +8,13 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "precommit": "pnpm run build && pnpm run test",
+    "prepare": "pnpm run build && pnpm run test",
     "pkg": "pkg . --out-path=bin --targets node18-linux-x64,node18-macos-x64,node18-win-x64 --overwrite",
     "test": "spec/test.sh"
   },
+  "files": [
+    "dist"
+  ],
   "pkg": {
     "assets": [
       "node_modules/@img/**/*"
@@ -25,7 +28,7 @@
   "author": "Wes Roberts <takq@a.zinc.email>",
   "license": "MIT",
   "dependencies": {
-    "@stegapng/core": "^1.0.0",
+    "@stegapng/core": "workspace:*",
     "commander": "^11.1.0",
     "sharp": "^0.33.0"
   },
