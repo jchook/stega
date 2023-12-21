@@ -23,7 +23,7 @@ Stega PNG uses [steganography](https://en.wikipedia.org/wiki/Steganography) to e
 
 We encode the data stochastically into the least-significant bits of the image's RGB colorspace data, making it invisible to the naked eye and difficult to detect.
 
-In real-world secnarios, one would combine this tool with compression, encryption, and non-default bit selection. You can achieve this easily using the [CLI utility](https://github.com/jchook/stega/blob/main/packages/cli/README.md).
+In real-world scenarios, one would combine this tool with compression, encryption, and non-default bit selection. You can achieve this easily using the [CLI utility](https://github.com/jchook/stega/blob/main/packages/cli/README.md).
 
 
 Packages
@@ -52,7 +52,7 @@ Use Case Examples
 - **For Fun**: Steganography can make for fun challenges (think Cicada 3301), inside jokes, or similar.
 
 
-If you use StegaPNG in other interesting ways, please [let us know](https://github.com/jchook/stega/issues/new). Also, please use this software ethically and for just cause.
+If you use Stega PNG in other interesting ways, please [let us know](https://github.com/jchook/stega/issues/new). Also, please use this software ethically and for just cause.
 
 
 Contributing,
