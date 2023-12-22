@@ -3,7 +3,7 @@ import fs from "fs";
 import { Command } from "commander";
 import { embedDataInImage, extractDataFromImage } from "@stegapng/core";
 import { readStdinToBuffer } from "./stdio";
-import { drawSomething } from "./draw";
+import { mandelbrotZoom } from "./draw";
 import packageJson from "../package.json";
 
 const useStdin = (x: string | undefined) => !x || x === "-";
@@ -30,9 +30,9 @@ export function createProgram() {
     .description("Embed data in an image")
     .argument("<image>", "Path to an image to embed data in")
     .argument("[data]", "Path to a data file to embed")
+    .option("-s, --seed <number>", "Seed for the random number generator")
     .option("-o, --output <output>", "Output file")
     .option("-f, --force", "Overwrite output file if it exists")
-    .option("-s, --seed", "Seed for the random number generator")
     .action(async (imagePath, dataPath, options) => {
       const seed = options.seed ? parseInt(options.seed) : undefined;
       const metadata = await sharp(imagePath).metadata();
@@ -83,9 +83,9 @@ export function createProgram() {
     .alias("x")
     .description("Extract data from an image")
     .argument("<image>", "Path to an image to extract data from")
+    .option("-s, --seed <number>", "Seed for the random number generator")
     .option("-o, --output <output>", "Output file")
     .option("-f, --force", "Overwrite output file if it exists")
-    .option("-s, --seed", "Seed for the random number generator")
     .action(async (imagePath, options) => {
       const seed = options.seed ? parseInt(options.seed) : undefined;
       const imageData = await sharp(imagePath)
@@ -133,7 +133,7 @@ export function createProgram() {
         .ensureAlpha()
         .toBuffer({ resolveWithObject: true });
 
-      drawSomething(imageData);
+      mandelbrotZoom(imageData);
 
       // Write to a file
       const finalImage = sharp(imageData.data, {

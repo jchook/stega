@@ -1,13 +1,26 @@
 #!/bin/bash
+#
+# Unit tests for the Stega CLI
+# Run this script from the root of the CLI package.
+#
+# Requires: bash, tsx, gpg, tar, diff
+# Optional: openssl (for faster AES256 encryption)
+#
+# This script expects set -e and will exit on the first failure.
+# To debug a failing test, add set -x somewhere inside the test function.
+# To run a single test, pass part of the test description as the first argument.
+#
 
-# Clean-up temp dir on exit
-trap "rm -rf tmp" EXIT INT TERM HUP QUIT ABRT
-
-# Command to run stega
+# Base directory
 basedir=$(pwd)
+if [ ! -f "$basedir/src/index.ts" ]; then
+  echo "Run this script from the root of the CLI package"
+  exit 1
+fi
+
+# Command to run the CLI
 stega="tsx $basedir/src/index.ts"
 
-# Test runner function
 # Blow up on errors
 set -e
 
@@ -21,28 +34,34 @@ echo "Hello, world!" > small.txt
 cp small.png small.txt tree
 
 
-# Test help
+# ---
+
+
 test_help() {
   $stega -h | grep -q "Usage:"
 }
 
 test_embed_extract() {
-  $stega embed small.png < small.txt > embedded.png
-  [ -s embedded.png ]
-  ! diff embedded.png small.png >/dev/null
-  $stega extract embedded.png > extracted.txt
-  [ -s extracted.txt ]
-  diff extracted.txt small.txt
-  rm extracted.txt embedded.png
+  mkdir -p output
+  $stega embed small.png < small.txt > output/a.png
+  [ -s output/a.png ]
+  ! diff output/a.png small.png >/dev/null
+  $stega extract output/a.png > output/a.txt
+  [ -s output/a.txt ]
+  diff output/a.txt small.txt
+  rm -rf output
 }
 
-test_tree_extract() {
-  tar cz tree | $stega embed large.png > embedded-tree.png
-  [ -s embedded-tree.png ]
+test_embed_extract_with_seed() {
   mkdir -p output
-  $stega extract embedded-tree.png | tar xz -C output
-  diff -r tree output/tree
-  rm -rf output embedded-tree.png
+  $stega embed --seed 123 small.png < small.txt > output/a.png
+  $stega embed --seed 234 small.png < small.txt > output/b.png
+  [ -s output/a.png ] && [ -s output/b.png ]
+  ! diff output/a.png output/b.png >/dev/null
+  $stega extract --seed 123 output/a.png > output/a.txt
+  $stega extract --seed 234 output/b.png > output/b.txt
+  [ -s output/a.txt ] && [ -s output/b.txt ]
+  rm -rf output
 }
 
 test_tree_encrypted_with_symmetric_AES256() {
@@ -60,8 +79,29 @@ test_tree_encrypted_with_symmetric_AES256() {
   rm -rf output encrypted-tree.png
 }
 
+test_tree_extract() {
+  tar cz tree | $stega embed large.png > embedded-tree.png
+  [ -s embedded-tree.png ]
+  mkdir -p output
+  $stega extract embedded-tree.png | tar xz -C output
+  diff -r tree output/tree
+  rm -rf output embedded-tree.png
+}
+
+
+# ---
+
 # Run the tests
-source ../spec/harness.sh
+# Note, this expects set -e and will exit on the first failure
+for test_fn in $(declare -F | awk '/declare -f test_/ {print $NF}'); do
+  test_desc=$(echo "$test_fn" | sed 's/test_//' | sed 's/_/ /g')
+  if [ -n "$1" ] && grep -qviE "$1" <<< "$test_desc"; then
+    continue
+  fi
+  printf "%s" "+ $test_desc "
+  $test_fn
+  printf "\r%s\n" "✓"
+done
 
 # Clean-up
 cd "$basedir"

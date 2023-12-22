@@ -27,25 +27,7 @@ export function rgba(
   };
 }
 
-export function drawSomething(imageData: ImageData) {
-  const { width, height } = imageData.info;
-  for (let x = 0; x < width; x++) {
-    for (let y = 0; y < height; y++) {
-      drawPoint(
-        imageData,
-        x,
-        y,
-        rgba(
-          Math.sin(x * y) * 255 % 120,
-          Math.cos(x * y) * 255 % 120,
-          Math.tan(x * y) * 255 % 120
-        )
-      );
-    }
-  }
-}
-
-export function drawPoint(
+export function point(
   imageData: ImageData,
   x: number,
   y: number,
@@ -58,7 +40,7 @@ export function drawPoint(
   imageData.data[index + 3] = color.a;
 }
 
-export function drawLine(
+export function line(
   imageData: ImageData,
   x1: number,
   y1: number,
@@ -74,13 +56,13 @@ export function drawLine(
   let x = x1;
   let y = y1;
   for (let i = 0; i <= steps; i++) {
-    drawPoint(imageData, Math.round(x), Math.round(y), color);
+    point(imageData, Math.round(x), Math.round(y), color);
     x += xIncrement;
     y += yIncrement;
   }
 }
 
-export function drawCircle(
+export function circle(
   imageData: ImageData,
   x: number,
   y: number,
@@ -93,13 +75,13 @@ export function drawCircle(
     for (let j = 0; j < diameter; j++) {
       const distanceSquared = Math.pow(i - radius, 2) + Math.pow(j - radius, 2);
       if (distanceSquared <= radiusSquared) {
-        drawPoint(imageData, x + i - radius, y + j - radius, color);
+        point(imageData, x + i - radius, y + j - radius, color);
       }
     }
   }
 }
 
-export function drawRectangle(
+export function rectangle(
   imageData: ImageData,
   x: number,
   y: number,
@@ -108,11 +90,58 @@ export function drawRectangle(
   color: RgbaColor
 ) {
   for (let i = 0; i < width; i++) {
-    drawPoint(imageData, x + i, y, color);
-    drawPoint(imageData, x + i, y + height - 1, color);
+    point(imageData, x + i, y, color);
+    point(imageData, x + i, y + height - 1, color);
   }
   for (let i = 0; i < height; i++) {
-    drawPoint(imageData, x, y + i, color);
-    drawPoint(imageData, x + width - 1, y + i, color);
+    point(imageData, x, y + i, color);
+    point(imageData, x + width - 1, y + i, color);
   }
 }
+
+export function sinCosTan(imageData: ImageData, modulus = 120) {
+  const { width, height } = imageData.info;
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+      point(
+        imageData,
+        x,
+        y,
+        rgba(
+          (Math.sin(x * y) * 255) % modulus,
+          (Math.cos(x * y) * 255) % modulus,
+          (Math.tan(x * y) * 255) % modulus
+        )
+      );
+    }
+  }
+}
+
+export function mandelbrotZoom(imageData: ImageData, maxIter = 100, rng = Math.random) {
+  const { width, height } = imageData.info;
+  const zoom = rng() * 500 + 200; // Random zoom
+  const moveX = rng() * 2 - 1; // Random X shift
+  const moveY = rng() * 2 - 1; // Random Y shift
+
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+      let zx = 0;
+      let zy = 0;
+      const cx = (x - width / 2) / zoom + moveX;
+      const cy = (y - height / 2) / zoom + moveY;
+      let iter = maxIter;
+
+      while (zx * zx + zy * zy < 4 && iter > 0) {
+        const temp = zx * zx - zy * zy + cx;
+        zy = 2 * zx * zy + cy;
+        zx = temp;
+        iter--;
+      }
+
+      const colorValue = iter % 256;
+      const color = rgba(colorValue, colorValue, 255, 255);
+      point(imageData, x, y, color);
+    }
+  }
+}
+
