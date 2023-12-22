@@ -44,7 +44,7 @@ export function createProgram() {
         useStdin(dataPath)
           ? await readStdinToBuffer()
           : fs.readFileSync(dataPath),
-        seed
+        seed,
       );
       let finalImage = sharp(imageData.data, {
         raw: {

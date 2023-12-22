@@ -1,4 +1,4 @@
-@import 'reset.scss';
+@import "reset.scss";
 
 // https://huemint.com/brand-intersection/#palette=1e1e1b-7ae384-64a09a-434f80
 $c1: #f7f5f0;
@@ -15,7 +15,8 @@ $g6: #65257d; // Violet
 $g7: #9a1d7a; // Magenta
 $g8: #e3403e; // Orange
 
-html, body {
+html,
+body {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -129,8 +130,8 @@ h3 {
   padding: 0 2rem 2rem 2rem;
   margin: 0 auto;
   max-width: 600px;
-  >.card {
-    background-color: #FFF;
+  > .card {
+    background-color: #fff;
     border-radius: 0.5rem;
     border: 1px solid darken($c1, 2);
     box-shadow: 0 0 2rem 0 transparentize($c2, 0.95);
@@ -183,7 +184,8 @@ hr {
   }
 }
 
-input, textarea {
+input,
+textarea {
   line-height: 1.15em;
   padding: 0.5em;
   color: $g3;
@@ -212,7 +214,8 @@ p.note {
   img {
     max-width: 100%;
   }
-  textarea, textarea:focus {
+  textarea,
+  textarea:focus {
     border-color: transparent;
   }
 }
@@ -233,7 +236,11 @@ button,
   border-radius: 0.2em;
   text-align: center;
   &:hover {
-    background-image: linear-gradient(to right, lighten($g3, 10), lighten($g4, 5));
+    background-image: linear-gradient(
+      to right,
+      lighten($g3, 10),
+      lighten($g4, 5)
+    );
     cursor: pointer;
   }
 }
@@ -243,7 +250,11 @@ button.extract,
   border-color: $g5;
   background-image: linear-gradient(to right, $g5, $g8);
   &:hover {
-    background-image: linear-gradient(to right, lighten($g5, 5), lighten($g8, 5));
+    background-image: linear-gradient(
+      to right,
+      lighten($g5, 5),
+      lighten($g8, 5)
+    );
   }
 }
 

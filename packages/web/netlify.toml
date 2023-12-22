@@ -2,7 +2,7 @@
 [build]
   command = "pnpm run build"
   functions = "netlify/functions"
-  publish = "dist"
+  publish = "/packages/web/dist"
 
   ## Uncomment to use this redirect for Single Page Applications like create-react-app.
   ## Not needed for static site generators.
