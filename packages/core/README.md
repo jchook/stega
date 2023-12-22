@@ -20,12 +20,8 @@ About
 -----
 
 <p>
-  <a href="https://stegapng.netlify.app/">
-    <img src="https://img.shields.io/badge/test%20coverage-100%25-brightgreen" title="100% Test Coverage" />
-  </a>
-  <a href="https://stegapng.netlify.app/">
-    <img src="https://img.shields.io/badge/license-MIT-brightgreen" title="MIT License" />
-  </a>
+  <a href="#"><img src="https://img.shields.io/badge/test%20coverage-100%25-brightgreen" title="100% Test Coverage" /></a>
+  <a href="#"><img src="https://img.shields.io/badge/license-MIT-brightgreen" title="MIT License" /></a>
 </p>
 
 

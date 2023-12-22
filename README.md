@@ -45,11 +45,11 @@ Use Case Examples
 
 - **Anti-Piracy**: Software and media companies can embed unique identifiers in distributed digital content to track and trace pirated copies.
 
-- **Privacy**: Anyone can use steganography to hide personal information, treasure maps, or sensitive data from being easily discovered or viewed.
+- **Privacy**: Anyone can use steganography to inconspicuously hide private or critical information such as treasure maps, passwords, etc.
 
 - **Research**: Privacy and security researchers can use Stega PNG as a framework for exploring different steganographic techniques or attacks.
 
-- **For Fun**: Steganography can make for fun challenges (think Cicada 3301), inside jokes, or similar.
+- **For Fun**: Folks use steganography in challenging puzzles (e.g. Cicada 3301), inside jokes, or similar subtle communication.
 
 
 If you use Stega PNG in other interesting ways, please [let us know](https://github.com/jchook/stega/issues/new). Also, please use this software ethically and for just cause.
@@ -69,7 +69,7 @@ Roadmap
 - [x] CLI tool
 - [x] Monorepo
 - [x] Configurable seed for LCG
-- [ ] Configurable embedder class, with optional .maxLength()
+- [ ] Configurable embedder class, with optional .dataLengthMax() API
 - [ ] Detection mode to predict or illustrate whether data is hidden in a PNG's LSBs
 - [ ] Support many embedding paradigms for different types of target documents
 - [ ] Efficient rewrite in Go/Rust/etc
