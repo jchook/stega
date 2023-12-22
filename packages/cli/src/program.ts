@@ -3,6 +3,8 @@ import fs from "fs";
 import { Command } from "commander";
 import { embedDataInImage, extractDataFromImage } from "@stegapng/core";
 import { readStdinToBuffer } from "./stdio";
+import { drawSomething } from "./draw";
+import packageJson from "../package.json";
 
 const useStdin = (x: string | undefined) => !x || x === "-";
 const useStdout = (x: string | undefined) =>
@@ -18,8 +20,8 @@ function assertNotPathExists(path: string) {
 export function createProgram() {
   const program = new Command();
   program
-    .name("steg")
-    .version("0.0.1")
+    .name("stega")
+    .version(packageJson.version)
     .description("A command line tool for steganography");
 
   program
@@ -131,20 +133,7 @@ export function createProgram() {
         .ensureAlpha()
         .toBuffer({ resolveWithObject: true });
 
-      // Draw a pretty picture
-      // TODO: Make this configurable or random
-      for (let x = 0; x < width; x++) {
-        for (let y = 0; y < height; y++) {
-          const red = Math.sin(x * y) * 255;
-          const green = Math.cos(x * y) * 255;
-          const blue = Math.tan(x * y) * 255;
-          const index = (y * width + x) * 4;
-          imageData.data[index] = red;
-          imageData.data[index + 1] = green;
-          imageData.data[index + 2] = blue;
-          imageData.data[index + 3] = 255;
-        }
-      }
+      drawSomething(imageData);
 
       // Write to a file
       const finalImage = sharp(imageData.data, {
