@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "fmt": "prettier --write packages/*/src/**/*.ts",
+    "publish": "./bin/published.sh pnpm publish",
     "prepack": "./bin/all.sh pnpm run prepack",
-    "test": "./bin/all.sh pnpm run test"
+    "test": "./bin/all.sh pnpm run test",
+    "version": "./bin/published.sh pnpm version"
   },
   "keywords": [
     "steganography",

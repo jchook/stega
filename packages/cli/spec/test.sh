@@ -64,4 +64,5 @@ test_tree_encrypted_with_symmetric_AES256() {
 source ../spec/harness.sh
 
 # Clean-up
+cd "$basedir"
 rm -rf tmp
