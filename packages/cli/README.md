@@ -7,14 +7,13 @@
 </p>
 
 <p align="center">
+  Hide arbitrary data in an image's RGB colorspace.
+</p>
+
+<p align="center">
   <a href="https://github.com/jchook/stega">Stega PNG project</a> |
   <a href="https://stegapng.netlify.app/">View Demo</a>
 </p>
-
-About
------
-
-Hide any data in the RGB colorspace of an image.
 
 
 Install
@@ -48,7 +47,7 @@ You can easily combine stega with other *nix tools to achieve amazing things.
 
 ### Files
 
-Embed entire file trees, using gzip compression.
+Embed entire file trees, with gzip compression.
 
 ```sh
 # Embed files into an image
@@ -60,10 +59,10 @@ stega extract embedded.png | tar xz
 
 ### Encryption
 
-Securely compress and encrypt files before embedding, too.
+Securely compress and encrypt files before embedding.
 
 ```sh
-# Embed data encrypted with AES (with a password)
+# Embed data encrypted via AES (with a password)
 tar cz mydir | gpg --symmetric --cipher-algo AES256 | stega embed image.png > embedded.png
 
 # Embed data encrypted for a specific recipient (with their public key)
