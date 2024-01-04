@@ -2,13 +2,11 @@ import sharp from "sharp";
 import fs from "fs";
 import { Command } from "commander";
 import { embedDataInImage, extractDataFromImage } from "@stegapng/core";
-import { readStdinToBuffer } from "./stdio";
+import { readStdinToBuffer, useStdin, useStdout, debug } from "./stdio";
 import { mandelbrotZoom } from "./draw";
 import packageJson from "../package.json";
 
-const useStdin = (x: string | undefined) => !x || x === "-";
-const useStdout = (x: string | undefined) =>
-  (!x && !process.stdout.isTTY) || x === "-";
+const DEFAULT_OUTPUT_PATH = "output.png";
 
 function assertNotPathExists(path: string) {
   if (fs.existsSync(path)) {
@@ -29,9 +27,9 @@ export function createProgram() {
     .alias("c")
     .description("Embed data in an image")
     .argument("<image>", "Path to an image to embed data in")
-    .argument("[data]", "Path to a data file to embed")
+    .argument("[data]", "Path to a data file to embed (use - for stdin)")
     .option("-s, --seed <number>", "Seed for the random number generator")
-    .option("-o, --output <output>", "Output file")
+    .option("-o, --output <output>", "Output file (use - for stdout)")
     .option("-f, --force", "Overwrite output file if it exists")
     .action(async (imagePath, dataPath, options) => {
       const seed = options.seed ? parseInt(options.seed) : undefined;
@@ -46,7 +44,7 @@ export function createProgram() {
         useStdin(dataPath)
           ? await readStdinToBuffer()
           : fs.readFileSync(dataPath),
-        seed,
+        seed
       );
       let finalImage = sharp(imageData.data, {
         raw: {
@@ -69,12 +67,12 @@ export function createProgram() {
             .on("finish", resolve);
         });
       } else {
-        const outputPath = options.output || "output.png";
+        const outputPath = options.output || DEFAULT_OUTPUT_PATH;
         if (!options.force) {
           assertNotPathExists(outputPath);
         }
         await finalImage.png().toFile(outputPath);
-        process.stderr.write(`Output to ${outputPath}\n`);
+        debug(`Output to ${outputPath}\n`);
       }
     });
 
@@ -82,19 +80,21 @@ export function createProgram() {
     .command("extract")
     .alias("x")
     .description("Extract data from an image")
-    .argument("<image>", "Path to an image to extract data from")
+    .argument("[image]", "Path to an image to extract data from")
     .option("-s, --seed <number>", "Seed for the random number generator")
-    .option("-o, --output <output>", "Output file")
+    .option("-o, --output <output>", "Output file (use - for stdout)")
     .option("-f, --force", "Overwrite output file if it exists")
     .action(async (imagePath, options) => {
       const seed = options.seed ? parseInt(options.seed) : undefined;
-      const imageData = await sharp(imagePath)
+      const imageData = await sharp(
+        useStdin(imagePath) ? await readStdinToBuffer() : imagePath
+      )
         .raw()
         .toColourspace("rgba")
         .ensureAlpha()
         .toBuffer({ resolveWithObject: true });
       const data = extractDataFromImage(imageData.data, seed);
-      if (options.output === "-" || !options.output) {
+      if (useStdout(options.output)) {
         await new Promise<void>((resolve, reject) => {
           process.stdout.write(data, (err) => {
             if (err) reject(err);
@@ -105,8 +105,9 @@ export function createProgram() {
         if (!options.force) {
           assertNotPathExists(options.output);
         }
-        process.stderr.write(`Output to ${options.output}\n`);
-        fs.writeFileSync(options.output, data);
+        const outputPath = options.output || DEFAULT_OUTPUT_PATH;
+        debug(`Output to ${outputPath}\n`);
+        fs.writeFileSync(outputPath, data);
       }
     });
 
@@ -115,7 +116,7 @@ export function createProgram() {
     .description("Generate a PNG file")
     .argument("[width]", "Width of the image", "256")
     .argument("[height]", "Height of the image", "256")
-    .option("-o, --output <output>", "Output file")
+    .option("-o, --output <output>", "Output file (use - for stdout)")
     .option("-f, --force", "Overwrite output file if it exists")
     .action(async (widthStr, heightStr, options) => {
       const width = parseInt(widthStr);
@@ -146,16 +147,16 @@ export function createProgram() {
 
       if (useStdout(options.output)) {
         finalImage.pipe(process.stdout).on("error", (err) => {
-          process.stderr.write(err.message);
+          debug(err.message);
           process.exit(1);
         });
       } else {
-        const outputPath = options.output || "output.png";
+        const outputPath = options.output || DEFAULT_OUTPUT_PATH;
         if (!options.force) {
           assertNotPathExists(outputPath);
         }
         await finalImage.toFile(outputPath);
-        process.stderr.write(`Output to ${outputPath}\n`);
+        debug(`Output to ${outputPath}\n`);
       }
     });
 

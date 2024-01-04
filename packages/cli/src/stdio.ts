@@ -9,3 +9,12 @@ export function readStdinToBuffer(): Promise<Buffer> {
       .on("end", () => resolve(Buffer.concat(chunks)));
   });
 }
+
+export const debug = (x: any) => {
+  process.stderr.write(`${x}\n`);
+  return x;
+};
+export const useStdin = (x: string | undefined) => !x || x === "-";
+export const useStdout = (x: string | undefined) =>
+  (!x && !process.stdout.isTTY) || x === "-";
+

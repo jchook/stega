@@ -25,10 +25,11 @@ Easily install via your favorite Node.js package manager (e.g. npm):
 npm install -g @stegapng/cli
 ```
 
+
 Simple Usage Examples
 ---------------------
 
-The stega CLI tool works very simply by default. For more usage info, run `stega help`.
+The stega CLI follows typical UNIX syntax conventions. For more usage info, run `stega help`.
 
 ```sh
 # Embed data into image.png
@@ -83,3 +84,4 @@ License
 -------
 
 MIT
+

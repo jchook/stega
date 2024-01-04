@@ -52,6 +52,12 @@ test_embed_extract() {
   rm -rf output
 }
 
+test_embed_extract_hello_world() {
+  mkdir -p output
+  OUT="$(echo "Hello, World" | $stega embed small.png | $stega extract | cat)"
+  [ "$OUT" = "Hello, World" ]
+}
+
 test_embed_extract_with_seed() {
   mkdir -p output
   $stega embed --seed 123 small.png < small.txt > output/a.png
@@ -91,6 +97,17 @@ test_tree_extract() {
 
 # ---
 
+# Colorful output
+if [ -t 1 ]; then IS_TTY=1; else IS_TTY=; fi
+ttput() {
+  if [ "$IS_TTY" = 1 ]; then
+    tput "$@" 2>/dev/null
+  fi
+}
+NONE="$(ttput sgr0)"
+GREEN="$(ttput setaf 2)"
+GRAY="$(ttput setaf 8)"
+
 # Run the tests
 # Note, this expects set -e and will exit on the first failure
 for test_fn in $(declare -F | awk '/declare -f test_/ {print $NF}'); do
@@ -98,9 +115,9 @@ for test_fn in $(declare -F | awk '/declare -f test_/ {print $NF}'); do
   if [ -n "$1" ] && grep -qviE "$1" <<< "$test_desc"; then
     continue
   fi
-  printf "%s" "+ $test_desc "
+  printf "%s" "${GRAY}+${NONE} $test_desc"
   $test_fn
-  printf "\r%s\n" "✓"
+  printf "\r%s\n" "${GREEN}✓${NONE}"
 done
 
 # Clean-up
