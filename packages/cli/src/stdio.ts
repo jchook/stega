@@ -17,4 +17,3 @@ export const debug = (x: any) => {
 export const useStdin = (x: string | undefined) => !x || x === "-";
 export const useStdout = (x: string | undefined) =>
   (!x && !process.stdout.isTTY) || x === "-";
-

@@ -17,7 +17,7 @@ export function rgba(
   r?: number,
   g?: number,
   b?: number,
-  a?: number
+  a?: number,
 ): RgbaColor {
   return {
     r: r ?? 0,
@@ -31,7 +31,7 @@ export function point(
   imageData: ImageData,
   x: number,
   y: number,
-  color: RgbaColor
+  color: RgbaColor,
 ) {
   const index = (y * imageData.info.width + x) * 4;
   imageData.data[index] = color.r;
@@ -46,7 +46,7 @@ export function line(
   y1: number,
   x2: number,
   y2: number,
-  color: RgbaColor
+  color: RgbaColor,
 ) {
   const dx = x2 - x1;
   const dy = y2 - y1;
@@ -67,7 +67,7 @@ export function circle(
   x: number,
   y: number,
   radius: number,
-  color: RgbaColor
+  color: RgbaColor,
 ) {
   const diameter = radius * 2;
   const radiusSquared = radius * radius;
@@ -87,7 +87,7 @@ export function rectangle(
   y: number,
   width: number,
   height: number,
-  color: RgbaColor
+  color: RgbaColor,
 ) {
   for (let i = 0; i < width; i++) {
     point(imageData, x + i, y, color);
@@ -110,14 +110,18 @@ export function sinCosTan(imageData: ImageData, modulus = 120) {
         rgba(
           (Math.sin(x * y) * 255) % modulus,
           (Math.cos(x * y) * 255) % modulus,
-          (Math.tan(x * y) * 255) % modulus
-        )
+          (Math.tan(x * y) * 255) % modulus,
+        ),
       );
     }
   }
 }
 
-export function mandelbrotZoom(imageData: ImageData, maxIter = 100, rng = Math.random) {
+export function mandelbrotZoom(
+  imageData: ImageData,
+  maxIter = 100,
+  rng = Math.random,
+) {
   const { width, height } = imageData.info;
   const zoom = rng() * 500 + 200; // Random zoom
   const moveX = rng() * 2 - 1; // Random X shift
@@ -144,4 +148,3 @@ export function mandelbrotZoom(imageData: ImageData, maxIter = 100, rng = Math.r
     }
   }
 }
-

@@ -44,7 +44,7 @@ export function createProgram() {
         useStdin(dataPath)
           ? await readStdinToBuffer()
           : fs.readFileSync(dataPath),
-        seed
+        seed,
       );
       let finalImage = sharp(imageData.data, {
         raw: {
@@ -87,7 +87,7 @@ export function createProgram() {
     .action(async (imagePath, options) => {
       const seed = options.seed ? parseInt(options.seed) : undefined;
       const imageData = await sharp(
-        useStdin(imagePath) ? await readStdinToBuffer() : imagePath
+        useStdin(imagePath) ? await readStdinToBuffer() : imagePath,
       )
         .raw()
         .toColourspace("rgba")
