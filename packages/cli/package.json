@@ -1,15 +1,16 @@
 {
   "name": "@stegapng/cli",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A CLI for stegapng",
   "bin": {
-    "stega": "dist/index.js"
+    "stega": "dist/src/index.js"
   },
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
+    "clean": "rimraf dist",
     "fmt": "prettier --write src",
-    "prepack": "pnpm run fmt && pnpm run build && pnpm run test",
+    "prepack": "pnpm run clean && pnpm run fmt && pnpm run build && pnpm run test",
     "pkg": "pkg . --out-path=bin --targets node18-linux-x64,node18-macos-x64,node18-win-x64 --overwrite",
     "test": "spec/test.sh"
   },
@@ -37,6 +38,7 @@
     "@types/node": "^20.10.3",
     "pkg": "^5.8.1",
     "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
     "typescript": "^5.3.2"
   }
 }

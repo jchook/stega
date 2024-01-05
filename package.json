@@ -1,14 +1,13 @@
 {
   "name": "stegapng",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Steganography for PNG images",
   "main": "index.js",
   "scripts": {
     "fmt": "prettier --write packages/*/src/**/*.ts",
-    "publish": "./bin/published.sh pnpm publish",
-    "prepack": "./bin/all.sh pnpm run prepack",
-    "test": "./bin/all.sh pnpm run test",
-    "version": "./bin/published.sh pnpm version"
+    "prepack": "pnpm run -r prepack",
+    "test": "pnpm run -r test",
+    "version": "pnpm -r version"
   },
   "keywords": [
     "steganography",
