@@ -1,5 +1,5 @@
 {
-  "name": "@stegapng/shell",
+  "name": "@stegapng/shell-ast",
   "version": "1.0.0",
   "description": "",
   "bin": {

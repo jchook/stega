@@ -65,8 +65,8 @@ function args<T extends [...Argument<any>[]]>(...args: T) {
 
 const command = createCommand({
   action: (command) => { // command is "this"
-    console.log(command.arguments[0].value.parsed); // Correctly typed as string
-    console.log(command.arguments[1].value.parsed); // Correctly typed as number
+    console.log(command.arguments?[0].value.parsed); // Correctly typed as string
+    console.log(command.arguments?[1].value.parsed); // Correctly typed as number
   },
   options: {
     output: {
