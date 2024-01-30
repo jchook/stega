@@ -1,76 +1,44 @@
-type Argument<T> = {
+interface HasValue<T> {
+  values?: T[];
+  value?: T;
+  parse?: (value: string) => T;
+}
+
+export interface Argument<T> extends HasValue<T> {
   name: string;
   description: string;
-  required: boolean;
-  value: {
-    defaultValue: T;
-    parsed: T;
-  };
+  required?: boolean;
 };
 
-type Option<T> = {
+export interface Flag {
   aliases: string[];
   description: string;
-  required: boolean;
-  value?: T;
+  required?: boolean;
 };
 
-type Command<TArguments extends [...Argument<any>[]], TOptions extends Record<string, Option<any>>> = {
-  action: (this: Command<TArguments, TOptions>) => void;
+export interface Option<T> extends HasValue<T>, Flag {
+};
+
+export type Options = Record<string, Option<any>>;
+export type Arguments = [...Argument<any>[]];
+
+export interface Command<TArguments extends Arguments = [], TOptions extends Options = {}> {
+  action: (command: this) => void;
   options: TOptions;
   arguments: [...TArguments];
 };
 
-function createCommand<TArguments extends [...Argument<any>[]], TOptions extends Record<string, Option<any>>>(
+export function createCommandStrict<TArguments extends Arguments, TOptions extends Options>(
   commandDefinition: Command<TArguments, TOptions>
 ): Command<TArguments, TOptions> {
   return commandDefinition;
 }
 
-const command = createCommand({
-  action: function() {
-    console.log(this.arguments[0].value.parsed); // Correctly typed as string
-    console.log(this.arguments[1].value.parsed); // Correctly typed as number
-  },
-  options: {
-    output: {
-      aliases: ["o"],
-      description: "Output file",
-      required: false,
-    },
-  },
-  arguments: [
-    {
-      name: "input",
-      description: "Input file",
-      required: true,
-      value: {
-        defaultValue: "-",
-        parsed: "test",
-      },
-    },
-    {
-      name: "strength",
-      description: "Strength",
-      required: true,
-      value: {
-        defaultValue: 1,
-        parsed: 5,
-      },
-    },
-  ],
-});
-
-
-// Assuming the previous definitions of Argument, Option, and Command
-
-function createDefaultAction<TArguments extends Argument<any>[], TOptions extends Record<string, Option<any>>>(): Command<TArguments, TOptions>['action'] {
-  return function() {
-    console.log('Default action executed.');
-  };
+export function createDefaultAction<TArguments extends Arguments, TOptions extends Options>(): Command<TArguments, TOptions>['action'] {
+  return function() {};
 }
 
-function completeCommand<TArguments extends Argument<any>[], TOptions extends Record<string, Option<any>>>(
+export function createCommand<TArguments extends Arguments, TOptions extends Options>(
   partialCommand: Partial<Command<TArguments, TOptions>>
 ): Command<TArguments, TOptions> {
   // Provide default action if not specified
@@ -87,38 +55,4 @@ function completeCommand<TArguments extends Argument<any>[], TOptions extends Re
     arguments: argumentsArray,
   };
 }
-
-const completedCommand = completeCommand({
-  action: function() {
-    console.log(this.arguments[0].value.parsed); // Correctly typed as string
-    console.log(this.arguments[1].value.parsed); // Correctly typed as number
-  },
-  options: {
-    output: {
-      aliases: ["o"],
-      description: "Output file",
-      required: false,
-    },
-  },
-  arguments: [
-    {
-      name: "input",
-      description: "Input file",
-      required: true,
-      value: {
-        defaultValue: "-",
-        parsed: "test",
-      },
-    },
-    {
-      name: "strength",
-      description: "Strength",
-      required: true,
-      value: {
-        defaultValue: 1,
-        parsed: 5,
-      },
-    },
-  ],
-});
 
