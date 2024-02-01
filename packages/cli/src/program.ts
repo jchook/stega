@@ -120,8 +120,8 @@ export function createProgram() {
   program
     .command("genpng")
     .description("Generate a PNG file")
-    .argument("[width]", "Width of the image", "256")
-    .argument("[height]", "Height of the image", "256")
+    .argument("[width]", "Width of the image", 256)
+    .argument("[height]", "Height of the image", 256)
     .option("-o, --output <output>", "Output file (use - for stdout)")
     .option("-f, --force", "Overwrite output file if it exists")
     .action(async (widthStr, heightStr, options) => {
@@ -164,6 +164,22 @@ export function createProgram() {
         await finalImage.toFile(outputPath);
         debug(`Output to ${outputPath}\n`);
       }
+    });
+
+  // Completions
+  program
+    .command("completions")
+    .description("Generate shell completions")
+    .argument("[shell]", "The shell to generate completions for")
+    .option("-i, --install", "Install the completions")
+    .action((shellInput) => {
+      const shell = shellInput || process.env.SHELL || "bash";
+      const file = path.join(__dirname, "completions", `stega.${shell}`);
+      if (!fs.existsSync(file)) {
+        console.error(`Unsupported shell: ${shell}`);
+        process.exit(1);
+      }
+      console.log(fs.readFileSync(file, "utf-8"));
     });
 
   return program;
