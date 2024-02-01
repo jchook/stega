@@ -1,8 +1,14 @@
 import sharp from "sharp";
 import fs from "fs";
+import path from "path";
 import { Command } from "commander";
 import { embedDataInImage, extractDataFromImage } from "@stegapng/core";
-import { readStdinToBuffer, useStdin, useStdout, debug } from "./stdio";
+import {
+  readStdinToBuffer,
+  shouldUseStdin,
+  shouldUseStdout,
+  debug,
+} from "./stdio";
 import { mandelbrotZoom } from "./draw";
 import packageJson from "../package.json";
 
@@ -41,10 +47,10 @@ export function createProgram() {
         .toBuffer({ resolveWithObject: true });
       embedDataInImage(
         imageData.data,
-        useStdin(dataPath)
+        shouldUseStdin(dataPath)
           ? await readStdinToBuffer()
           : fs.readFileSync(dataPath),
-        seed,
+        seed
       );
       let finalImage = sharp(imageData.data, {
         raw: {
@@ -58,7 +64,7 @@ export function createProgram() {
         finalImage = finalImage.removeAlpha();
       }
 
-      if (useStdout(options.output)) {
+      if (shouldUseStdout(options.output)) {
         await new Promise((resolve, reject) => {
           finalImage
             .png()
@@ -87,14 +93,14 @@ export function createProgram() {
     .action(async (imagePath, options) => {
       const seed = options.seed ? parseInt(options.seed) : undefined;
       const imageData = await sharp(
-        useStdin(imagePath) ? await readStdinToBuffer() : imagePath,
+        shouldUseStdin(imagePath) ? await readStdinToBuffer() : imagePath
       )
         .raw()
         .toColourspace("rgba")
         .ensureAlpha()
         .toBuffer({ resolveWithObject: true });
       const data = extractDataFromImage(imageData.data, seed);
-      if (useStdout(options.output)) {
+      if (shouldUseStdout(options.output)) {
         await new Promise<void>((resolve, reject) => {
           process.stdout.write(data, (err) => {
             if (err) reject(err);
@@ -145,7 +151,7 @@ export function createProgram() {
         },
       }).png();
 
-      if (useStdout(options.output)) {
+      if (shouldUseStdout(options.output)) {
         finalImage.pipe(process.stdout).on("error", (err) => {
           debug(err.message);
           process.exit(1);

@@ -14,6 +14,6 @@ export const debug = (x: any) => {
   process.stderr.write(`${x}\n`);
   return x;
 };
-export const useStdin = (x: string | undefined) => !x || x === "-";
-export const useStdout = (x: string | undefined) =>
+export const shouldUseStdin = (x: string | undefined) => !x || x === "-";
+export const shouldUseStdout = (x: string | undefined) =>
   (!x && !process.stdout.isTTY) || x === "-";
