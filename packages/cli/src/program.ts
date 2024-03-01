@@ -3,7 +3,14 @@ import path from "path";
 import fs from "fs";
 import { Command } from "commander";
 import { embedDataInImage, extractDataFromImage } from "@stegapng/core";
-import { readStdinToBuffer, useStdin, useStdout, debug } from "./stdio";
+import {
+  readStdinToBuffer,
+  useStdin,
+  useStdout,
+  debug,
+  createStreamWriter,
+  createStdoutWriter,
+} from "./stdio";
 import { mandelbrotZoom } from "./draw";
 import packageJson from "../package.json";
 
@@ -45,7 +52,7 @@ export function createProgram() {
         useStdin(dataPath)
           ? await readStdinToBuffer()
           : fs.readFileSync(dataPath),
-        seed,
+        seed
       );
       let finalImage = sharp(imageData.data, {
         raw: {
@@ -80,35 +87,37 @@ export function createProgram() {
   program
     .command("extract")
     .alias("x")
-    .description("Extract data from an image")
-    .argument("[image]", "Path to an image to extract data from")
+    .description("Extract data from an image or multiple images")
+    .argument("[images...]", "Path to image(s) to extract data from")
     .option("-s, --seed <number>", "Seed for the random number generator")
     .option("-o, --output <output>", "Output file (use - for stdout)")
     .option("-f, --force", "Overwrite output file if it exists")
-    .action(async (imagePath, options) => {
+    .action(async (imagePaths, options) => {
       const seed = options.seed ? parseInt(options.seed) : undefined;
-      const imageData = await sharp(
-        useStdin(imagePath) ? await readStdinToBuffer() : imagePath,
-      )
-        .raw()
-        .toColourspace("rgba")
-        .ensureAlpha()
-        .toBuffer({ resolveWithObject: true });
-      const data = extractDataFromImage(imageData.data, seed);
-      if (useStdout(options.output)) {
-        await new Promise<void>((resolve, reject) => {
-          process.stdout.write(data, (err) => {
-            if (err) reject(err);
-            else resolve();
-          });
-        });
-      } else {
-        if (!options.force) {
-          assertNotPathExists(options.output);
+      const streamWriter = (() => {
+        if (useStdout(options.output)) {
+          return createStdoutWriter();
+        } else {
+          const outputPath = options.output || DEFAULT_OUTPUT_PATH;
+          if (!options.force) {
+            assertNotPathExists(options.output);
+          }
+          return createStreamWriter(outputPath);
         }
-        const outputPath = options.output || DEFAULT_OUTPUT_PATH;
-        debug(`Output to ${outputPath}\n`);
-        fs.writeFileSync(outputPath, data);
+      })();
+      if (imagePaths.length === 0) {
+        imagePaths.push("-");
+      }
+      for (const imagePath of imagePaths) {
+        const imageData = await sharp(
+          useStdin(imagePath) ? await readStdinToBuffer() : imagePath
+        )
+          .raw()
+          .toColourspace("rgba")
+          .ensureAlpha()
+          .toBuffer();
+        const data = extractDataFromImage(imageData, seed);
+        await streamWriter.write(data);
       }
     });
 
@@ -163,12 +172,12 @@ export function createProgram() {
 
   // Completions
   program
-    .command("completions")
+    .command("completions", { hidden: true })
     .description("Generate shell completions")
     .argument("[shell]", "The shell to generate completions for")
-    .option("-i, --install", "Install the completions")
     .action((shellInput) => {
-      const shell = shellInput || process.env.SHELL || "bash";
+      const shell =
+        shellInput || path.basename(process.env.SHELL ?? "") || "bash";
       const file = path.join(__dirname, "completions", `stega.${shell}`);
       if (!fs.existsSync(file)) {
         console.error(`Unsupported shell: ${shell}`);

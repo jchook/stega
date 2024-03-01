@@ -43,7 +43,7 @@ stega extract embedded.png
 Real-World Usage Examples
 -------------------------
 
-You can easily combine stega with other *nix tools to achieve amazing things.
+You can easily combine stega with other \*nix tools to achieve amazing things.
 
 
 ### Files
@@ -72,6 +72,31 @@ tar cz mydir | gpg --encrypt --recipient some@example.email | stega embed image.
 # Extract and decrypt the data (from either encryption scenario)
 stega extract embedded.png | gpg --decrypt | tar xz
 ```
+
+### Large Files
+
+To embed large files across many images, use the [`split`](https://man7.org/linux/man-pages/man1/split.1.html) utility.
+
+```sh
+# Split the data file into chunks
+split -b 32k your-data chunk.
+
+# Embed each chunk into a unique PNG
+mkdir -p embedded
+for chunk in chunk.*; do
+  $stega genpng 512 512 > temp.png
+  $stega embed temp.png < "$chunk" > "embedded/$chunk.png"
+done
+
+# Extract all of the data from the embedded pngs
+$stega extract output/*.png > your-data-extracted
+```
+
+
+Shell Completions
+-----------------
+
+You can use the `stega completions [zsh|bash]` command to print the shell completion code. The completion scripts are also available as static files in the `src/completions` directory.
 
 
 Contribution

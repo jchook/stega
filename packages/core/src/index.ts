@@ -15,6 +15,17 @@ import { imageChannelIndexGenerator } from "./lcg";
 export type RgbaData = Uint8ClampedArray | Buffer;
 
 /**
+ * Type guard for RgbaData.
+ */
+export function isRgbaData(data: unknown): data is RgbaData {
+  return (
+    data instanceof Uint8ClampedArray ||
+    data instanceof Buffer ||
+    Buffer.isBuffer(data)
+  );
+}
+
+/**
  * Embeds hidden data into an image's RGBA colorspace data.
  *
  * Data is embedded into "random" pixel channels. The order is determined by an

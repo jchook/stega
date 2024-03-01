@@ -94,6 +94,18 @@ test_tree_extract() {
   rm -rf output embedded-tree.png
 }
 
+test_split_embed_extract() {
+  mkdir -p output
+  split -b 32k large.png chunk.
+  for chunk in chunk.*; do
+    $stega genpng 512 512 > temp.png
+    $stega embed temp.png < "$chunk" > "output/$chunk.png"
+  done
+  $stega extract output/*.png > decoded.png
+  diff large.png decoded.png
+  rm -rf output chunk.* decoded.png temp.png
+}
+
 
 # ---
 
