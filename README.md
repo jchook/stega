@@ -37,15 +37,17 @@ Packages
 Use Case Examples
 -----------------
 
+- **Privacy**: Anyone can use steganography to inconspicuously hide private or critical information such as sensitive messages, treasure maps, passwords, etc.
+
 - **Freedom of Speech**: Journalists or others in sensitive political environments can use steganography to hide messages within images or videos, reducing the risk of interception by oppressive regimes.
 
-- **Secure File Sharing**: Individuals can use steganography to share sensitive documents or information by hiding them within innocuous files, reducing the likelihood of detection during transmission.
+- **Secure File Sharing**: Individuals can use steganography to share sensitive documents or information by hiding them within innocuous files, reducing the likelihood of detection.
+
+- **Invisible Watermarks**: Steganography can add an invisible metadata to a document.
 
 - **Data Leakage**: Corporations can embed hidden markers in sensitive documents for each recipient. If these documents are leaked, the source of the leak can be traced using the embedded information.
 
 - **Anti-Piracy**: Software and media companies can embed unique identifiers in distributed digital content to track and trace pirated copies.
-
-- **Privacy**: Anyone can use steganography to inconspicuously hide private or critical information such as treasure maps, passwords, etc.
 
 - **Research**: Privacy and security researchers can use Stega PNG as a framework for exploring different steganographic techniques or attacks.
 
@@ -61,17 +63,17 @@ Contributing,
 Feel free to [open an issue](https://github.com/jchook/stega/issues/new) or fork the repo and submit a pull request.
 
 
-Roadmap
--------
+Development Roadmap
+-------------------
 
 - [x] Basic proof of concept (Web demo)
 - [x] Factor-out portable TypeScript core
 - [x] CLI tool
 - [x] Monorepo
 - [x] Configurable seed for LCG
-- [ ] Configurable embedder class, with optional .dataLengthMax() API
-- [ ] Detection mode to predict or illustrate whether data is hidden in a PNG's LSBs
+- [ ] Refactor core to allow for configurable/extensible steganography codecs
 - [ ] Support many embedding paradigms for different types of target documents
+- [ ] Detection modes to predict or illustrate whether data is hidden in a document
 - [ ] Efficient rewrite in Go/Rust/etc
 - [ ] GUI tool
 
