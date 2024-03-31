@@ -1,4 +1,3 @@
-import { RgbaData, isRgbaData } from "@stegapng/core";
 import * as fs from "fs";
 import { Readable } from "stream";
 

@@ -10,3 +10,4 @@
 
 - [embedDataInImage](functions/embedDataInImage.md)
 - [extractDataFromImage](functions/extractDataFromImage.md)
+- [isRgbaData](functions/isRgbaData.md)

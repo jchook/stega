@@ -52,7 +52,7 @@ export function createProgram() {
         useStdin(dataPath)
           ? await readStdinToBuffer()
           : fs.readFileSync(dataPath),
-        seed
+        seed,
       );
       let finalImage = sharp(imageData.data, {
         raw: {
@@ -110,7 +110,7 @@ export function createProgram() {
       }
       for (const imagePath of imagePaths) {
         const imageData = await sharp(
-          useStdin(imagePath) ? await readStdinToBuffer() : imagePath
+          useStdin(imagePath) ? await readStdinToBuffer() : imagePath,
         )
           .raw()
           .toColourspace("rgba")
@@ -173,7 +173,7 @@ export function createProgram() {
   // Completions
   program
     .command("completions", { hidden: true })
-    .description("Generate shell completions")
+    .description("Print shell completions for zsh or bash")
     .argument("[shell]", "The shell to generate completions for")
     .action((shellInput) => {
       const shell =
