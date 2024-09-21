@@ -28,9 +28,9 @@ export function isRgbaData(data: unknown): data is RgbaData {
 /**
  * Embeds hidden data into an image's RGBA colorspace data.
  *
- * Data is embedded into "random" pixel channels. The order is determined by an
- * LCG generator. The generator will skip indices that are out of bounds or are
- * the alpha channel.
+ * Data is embedded into the least significant bits of pseudorandom pixel
+ * channels. The order is determined by an LCG generator. The generator will
+ * skip indices that are out of bounds or are the alpha channel.
  *
  * Choosing an LCG generator ensures that storage capacity is maximized, while
  * the data is also stochastically distributed throughout the image.
@@ -53,6 +53,9 @@ export function embedDataInImage(
   );
 
   // Check to see if the image is large enough to embed the data
+  // Note: We divide by 4 because there are 4 channels per pixel, then we
+  // multiply by 3 because we embed max 3 bits per pixel (skipping the alpha
+  // channel). We then divide by 8 to get the number of bytes (8 bits per byte).
   const maxDataLength = Math.floor(((imageDataLength / 4) * 3) / 8);
   if (data.length > maxDataLength) {
     throw new Error(
@@ -60,7 +63,13 @@ export function embedDataInImage(
     );
   }
 
+  // Embed `length` bits into the RGBA color channel data.
+  // Note that JavaScript bitwise operators only work on 32-bit integers, so
+  // do not supply a length greater than 32.
   const embedBits = (bits: number, length = 8) => {
+    if (length > 32) {
+      throw new Error("Cannot embed more than 32 bits at a time.");
+    }
     for (let bitIndex = 0; bitIndex < length; bitIndex++) {
       const index = indexGenerator.next().value;
       const bit = (bits >> bitIndex) & 1;
@@ -76,11 +85,17 @@ export function embedDataInImage(
   // This allows us to know how many bytes to read when extracting.
   embedBits(data.length, 32);
 
+  // Embed the data
   for (let byte of data) {
     embedBits(byte);
   }
 }
 
+/**
+ * Sets the least significant bit of a byte to a given bit.
+ * The bit must be 0 or 1.
+ * The byte must be an integer between 0 and 255.
+ */
 function setLSB(byte: number, bit: number): number {
   return (byte & 0xfe) | bit;
 }
@@ -89,7 +104,7 @@ function setLSB(byte: number, bit: number): number {
  * Extracts hidden data from an image's RGBA colorspace data.
  * This is the inverse of embedDataInImage.
  *
- * Note that the supplied array is not modified.
+ * The supplied rgba array is not modified.
  */
 export function extractDataFromImage(
   rgba: RgbaData,
