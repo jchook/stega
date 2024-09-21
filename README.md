@@ -59,7 +59,7 @@ Anyone can use steganography to inconspicuously hide private or critical informa
 
 Steganography can add an invisible signature to a document.
 
-- **Authentication**: Steganography can help verify the authenticity of a document or its source, by embedding cryptographic signatures signatures.
+- **Authentication**: Steganography can help verify the authenticity of a document or its source, by embedding cryptographic signatures.
 
 - **Data Leakage**: Unique hidden markers can be embedded into sensitive documents for each recipient. If these marked documents are leaked, the source of the leak can be traced using the embedded marker.
 
@@ -74,14 +74,14 @@ Privacy and security researchers can use Stega PNG as a framework for exploring 
 
 - **Detect the Presence of Hidden Data**: Researchers can use the framework to rapidly produce lots of test and validation datasets for analysis, and develop systems to detect the presence of hidden data.
 
-- **Uniformly Test New Ideas**: With consistent core framework, researchers can test many different approaches with relatively snappy and developer-friendly ecosystem, automated tests, and reliable measurements.
+- **Uniformly Test New Ideas**: With a consistent core framework, researchers can test many different approaches with relatively snappy and developer-friendly ecosystem, automated tests, and reliable measurements.
 
 
 ### Just For Fun
 
 Folks use steganography in challenging puzzles, inside jokes, or similar subtle communication.
 
-- **Community Puzzles or Games**: Folks can use steganography to augment or enjoy challenges akin to Cicada 3301, geocaching, or others like Capture The Flag hacking challenges.
+- **Community Puzzles or Games**: Organizers can use steganography to augment challenges akin to Cicada 3301, geocaching, or others like Capture The Flag hacking challenges.
 
 - **Easter-Eggs**: Images can contain special signatures that unlock secrets within AR games or other apps.
 
