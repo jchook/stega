@@ -83,5 +83,5 @@ Next, the RGBA array is rendered as a lossless PNG file, which can be decoded by
 
 In the inverse process, an identical LCG is generated to discover the embedded data in the correct order. The version byte MUST be 0. The data length is read first, then the data.
 
-Arbitrary data can be encoded using this method, for example: the bits of an encrypted zip file. StegaV0 intentionally makes no attempt to store any filename or type information. For this purpose, you should use a separate tool such as `tar`.
+Arbitrary data can be encoded using this method, for example: the bits of an encrypted zip file. StegaV0 intentionally makes no attempt to store any filename or type information. For this purpose, you should use a separate tool such as `tar`. See the [CLI tool](../cli) for examples.
 
