@@ -84,12 +84,12 @@ split -b 32k your-data chunk.
 # Embed each chunk into a unique PNG
 mkdir -p embedded
 for chunk in chunk.*; do
-  $stega genpng 512 512 > temp.png
-  $stega embed temp.png < "$chunk" > "embedded/$chunk.png"
+  stega genpng 512 512 > temp.png
+  stega embed temp.png < "$chunk" > "embedded/$chunk.png"
 done
 
 # Extract all of the data from the embedded pngs
-$stega extract output/*.png > your-data-extracted
+stega extract output/*.png > your-data-extracted
 ```
 
 
