@@ -21,7 +21,7 @@ How It Works
 
 Stega PNG uses [steganography](https://en.wikipedia.org/wiki/Steganography) to embed data invisibly into a digital file.
 
-For example, into PNG images, we encode secret data stochastically into the least-significant bits of the image's RGB colorspace data, making it invisible to the naked eye and difficult to detect.
+In this version, we encode secret data stochastically into the least-significant bits of a PNG image's RGB colorspace data, making it invisible to the naked eye and difficult to detect. Eventually the project will expand to support many different data formats such as PDFs, audio files, etc.
 
 In some scenarios, you may wish to combine this tool with compression,
 encryption, custom codecs, etc. You can achieve this easily using the [CLI
@@ -114,6 +114,7 @@ Development Roadmap
 - [x] CLI tool
 - [ ] Refactor core to allow for configurable/extensible steganography codecs
 - [ ] Support many embedding paradigms for different types of target documents
+- [ ] Explore novel techniques that are resilient to re-encoding
 - [ ] Detection modes to predict or illustrate whether data is hidden in a document
 - [ ] Efficient rewrite in Go/Rust/etc
 - [ ] GUI tool
